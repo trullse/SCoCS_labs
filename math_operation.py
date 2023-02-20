@@ -2,6 +2,8 @@ from constants import ADD, SUB, MULT, DIV
 
 
 def do_operation(x, y, oper):
+    x = float(x)
+    y = float(y)
 
     if oper == ADD:
         return x + y
@@ -13,4 +15,3 @@ def do_operation(x, y, oper):
         return x / y
 
     raise Exception("Operation is not implemented!")
-    
