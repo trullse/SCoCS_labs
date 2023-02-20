@@ -1,3 +1,6 @@
+from constants import ADD, SUB, MULT, DIV
+
+
 def do_operation(x, y, oper):
 
     if oper == ADD:
