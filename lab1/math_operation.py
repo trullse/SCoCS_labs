@@ -1,9 +1,7 @@
 from constants import ADD, SUB, MULT, DIV
 
 
-def do_operation(x, y, oper):
-    x = float(x)
-    y = float(y)
+def do_operation(x: float, y: float, oper: str):
 
     if oper == ADD:
         return x + y

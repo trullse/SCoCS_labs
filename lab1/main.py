@@ -5,14 +5,14 @@ import even_nums as en
 
 hw.hello_world()                    # First task.
 
-print("Enter the first number:")    # Second task.
-a = input()
-print("Enter the second number:")
-b = input()
-print("Enter the operation (add, sub, mult, div):")
-operation = input()
-try:
-    print("Result is ", mo.do_operation(a, b, operation))
+try:                                # Second task.
+    a = float(input("Enter the first number:"))
+    b = float(input("Enter the second number:"))
+    operation = input("Enter the operation (add, sub, mult, div):")
+    try:
+        print("Result is ", mo.do_operation(a, b, operation))
+    except Exception as err:
+        print(err)
 except Exception as err:
     print(err)
 
