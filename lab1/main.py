@@ -10,7 +10,7 @@ try:                                # Second task.
     b = float(input("Enter the second number:"))
     operation = input("Enter the operation (add, sub, mult, div):")
     try:
-        print("Result is ", mo.do_operation(a, b, operation))
+        print("Result is ", mo.calculate(a, b, operation))
     except Exception as err:
         print(err)
 except Exception as err:
