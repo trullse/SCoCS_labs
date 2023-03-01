@@ -1,2 +1,3 @@
-def hello_world():
+def greeting():
     print("Hello world")
+    
