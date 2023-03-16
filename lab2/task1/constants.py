@@ -1,3 +1,3 @@
 FILE_DIRECTORY = "test_text.txt"
 
-SENTENCE_TEMPLATE = r"\."
+SENTENCE_TEMPLATE = r"(\.|\.\.\.|!|\?)\s"

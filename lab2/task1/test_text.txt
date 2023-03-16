@@ -1,1 +1,11 @@
-This is test text. For first task the program should find the amount of sentences. It should also ignore abbreviation for this task.
+Lena woke up early in the morning feeling excited. She had been planning a surprise for her best friend's birthday for weeks now, and today was finally the day. She got dressed, double-checked all her preparations, and headed out the door.
+
+The sun was just starting to rise, casting a golden glow over the city. Lena couldn't help but smile as she walked, feeling grateful for the peaceful moment...
+
+Finally, she arrived at her friend's apartment, ready to give her the best birthday surprise ever. She knocked on the door and waited patiently. Is her friend at home?!
+
+When her friend opened the door, Lena pulled out a big bouquet of balloons, a homemade cake, and a beautifully wrapped gift. Her friend's face lit up with surprise and delight.
+
+They spent the day together, laughing, eating cake, and catching up on each other's lives. It was the perfect celebration of their friendship.
+
+As the day drew to a close, Lena said goodbye to her friend, feeling happy and fulfilled. It was moments like these that made all the hard work and planning worth it. She went to bed that night, feeling grateful for the joy that her friend brought into her life.
