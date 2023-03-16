@@ -1,12 +1,15 @@
 import re
-from constants import SENTENCE_TEMPLATE
+from constants import SENTENCE_TEMPLATE, ABBREVIATIONS
 
 
 def get_statistics(file_directory: str):
     text = read_text(file_directory)
     statistics = {}
     result = re.findall(SENTENCE_TEMPLATE, text)
-    statistics["Sentences amount: "] = len(result)
+    res_count = len(result)
+    for abbr in ABBREVIATIONS:
+        res_count -= text.count(abbr)
+    statistics["Sentences amount: "] = res_count
     return statistics
 
 
