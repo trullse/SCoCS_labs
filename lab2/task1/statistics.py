@@ -12,10 +12,7 @@ def get_sentences_amount(text: str):
     result = len(re.findall(SENTENCE_TEMPLATE, text))
     for abbr in ABBREVIATIONS:
         result -= text.count(abbr)
-    for abbr in END_ABBREVIATIONS:
-        abbr += r"\s+[^A-Z]"
-        result -= len(re.findall(abbr, text))
-
+    result -= len(re.findall(END_ABBREVIATIONS, text))
     return result
 
 
