@@ -1,5 +1,5 @@
 import re
-from constants import SENTENCE_TEMPLATE, ABBREVIATIONS, END_ABBREVIATIONS
+from constants import SENTENCE_TEMPLATE, ABBREVIATIONS, END_ABBREVIATIONS, INITIALS_TEMPLATE
 
 
 def get_statistics(file_directory: str):
@@ -13,6 +13,7 @@ def get_sentences_amount(text: str):
     for abbr in ABBREVIATIONS:
         result -= text.count(abbr)
     result -= len(re.findall(END_ABBREVIATIONS, text))
+    result -= len(re.findall(INITIALS_TEMPLATE, text))
     return result
 
 

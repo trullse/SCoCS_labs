@@ -6,3 +6,4 @@ ABBREVIATIONS = ("Mr.", "Mrs.", "Dr.", "Lt.", "Rep.", "Jan.", "Feb.", "Mar.", "A
                  "Tues.", "Wed.", "Th.", "Thu.", "Thur.", "Thur.", "Thurs.", "Fri.", "Sat.", "Sun.",
                  "in.", "lbs.")
 END_ABBREVIATIONS = r"(etc\.|e\.g\.|i\.e\.)\s+[^A-Z]"
+INITIALS_TEMPLATE = r"[A-Z]\.\s"
