@@ -4,16 +4,6 @@ from constants import SENTENCE_TEMPLATE, ABBREVIATIONS, END_ABBREVIATIONS, INITI
     WORD_TEMPLATE, NUMBER_TEMPLATE, NEWLINE_TEMPLATE
 
 
-def get_statistics(file_directory: str):
-    text = read_text(file_directory)
-    statistics = {"Sentences amount: ": get_sentences_amount(text),
-                  "Non-declarative sentences amount: ": get_non_declarative_amount(text),
-                  "Average length of the sentence: ": get_sentences_length(text),
-                  "Average length of the word: ": get_word_length(text),
-                  "Top k repeated n-grams: {}": get_top_k_ngrams(text, 5, 5)}
-    return statistics
-
-
 def get_sentences_amount(text: str):
     result = len(re.findall(SENTENCE_TEMPLATE, text))
     for abbr in ABBREVIATIONS:
