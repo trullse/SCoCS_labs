@@ -1,6 +1,7 @@
 import re
+from collections import Counter
 from constants import SENTENCE_TEMPLATE, ABBREVIATIONS, END_ABBREVIATIONS, INITIALS_TEMPLATE, NON_DECLARATIVE_TEMPLATE,\
-    WORD_TEMPLATE, NUMBER_TEMPLATE
+    WORD_TEMPLATE, NUMBER_TEMPLATE, NEWLINE_TEMPLATE
 
 
 def get_statistics(file_directory: str):
@@ -8,7 +9,8 @@ def get_statistics(file_directory: str):
     statistics = {"Sentences amount: ": get_sentences_amount(text),
                   "Non-declarative sentences amount: ": get_non_declarative_amount(text),
                   "Average length of the sentence: ": get_sentences_length(text),
-                  "Average length of the word: ": get_word_length(text)}
+                  "Average length of the word: ": get_word_length(text),
+                  "Top k repeated n-grams: {}": get_top_k_ngrams(text, 5, 5)}
     return statistics
 
 
@@ -43,6 +45,17 @@ def get_word_length(text: str):
     for num in nums:
         words_len -= len(num)
     return words_len / (len(words) - len(nums))
+
+
+def get_top_k_ngrams(text: str, k: int, n: int):
+    text = text.lower()
+    text = re.sub(NEWLINE_TEMPLATE, " ", text)
+    ngrams = []
+    for i in range(len(text) - n + 1):
+        ngrams.append(text[i:i+n])
+    frequency_dictionary = dict(Counter(ngrams))
+    sorted_frequencies = sorted(frequency_dictionary.items(), key=lambda item: item[1], reverse=True)
+    return sorted_frequencies[:k]
 
 
 def read_text(file_directory: str):
