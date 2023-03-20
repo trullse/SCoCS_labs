@@ -1,5 +1,4 @@
 import re
-from collections import Counter
 from constants import SENTENCE_TEMPLATE, ABBREVIATIONS, END_ABBREVIATIONS, INITIALS_TEMPLATE, NON_DECLARATIVE_TEMPLATE, \
     WORD_TEMPLATE, NUMBER_TEMPLATE, NEWLINE_TEMPLATE
 
@@ -43,9 +42,16 @@ def get_top_k_ngrams(text: str, k=10, n=4):
     ngrams = []
     for i in range(len(text) - n + 1):
         ngrams.append(text[i:i + n])
-    frequency_dictionary = dict(Counter(ngrams))
+    frequency_dictionary = count_frequency(ngrams)
     sorted_frequencies = sorted(frequency_dictionary.items(), key=lambda item: item[1], reverse=True)
     return sorted_frequencies[:k]
+
+
+def count_frequency(elements):
+    frequencies = {}
+    for el in elements:
+        frequencies[el] = frequencies.get(el, 0) + 1
+    return frequencies
 
 
 def read_text(file_directory: str):
