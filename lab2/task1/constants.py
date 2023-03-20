@@ -7,7 +7,7 @@ ABBREVIATIONS = ("Mr.", "Mrs.", "Dr.", "Lt.", "Rep.", "Jan.", "Feb.", "Mar.", "A
                  "in.", "lbs.")
 END_ABBREVIATIONS = r"(etc\.|e\.g\.|i\.e\.)\s+[^A-Z]"
 INITIALS_TEMPLATE = r"[A-Z]\.\s"
-NON_DECLARATIVE_TEMPLATE = r"!|\?[\s\"']"
+NON_DECLARATIVE_TEMPLATE = r"!|\?([\s\"']|$)"
 WORD_TEMPLATE = r"\b\w[\w']*\b"
 NUMBER_TEMPLATE = r"\b\d[\d\.]*\b"
 NEWLINE_TEMPLATE = r"\n"
