@@ -11,7 +11,6 @@ def main():
         else:
             print("You've chosen to read test_text.txt")
             text = read_text(FILE_DIRECTORY)
-        text += " "
         correct_input = False
         k = 0
         n = 0
