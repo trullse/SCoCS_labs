@@ -1,6 +1,6 @@
 import re
 from collections import Counter
-from constants import SENTENCE_TEMPLATE, ABBREVIATIONS, END_ABBREVIATIONS, INITIALS_TEMPLATE, NON_DECLARATIVE_TEMPLATE,\
+from constants import SENTENCE_TEMPLATE, ABBREVIATIONS, END_ABBREVIATIONS, INITIALS_TEMPLATE, NON_DECLARATIVE_TEMPLATE, \
     WORD_TEMPLATE, NUMBER_TEMPLATE, NEWLINE_TEMPLATE
 
 
@@ -37,12 +37,12 @@ def get_word_length(text: str):
     return words_len / (len(words) - len(nums))
 
 
-def get_top_k_ngrams(text: str, k: int, n: int):
+def get_top_k_ngrams(text: str, k=10, n=4):
     text = text.lower()
     text = re.sub(NEWLINE_TEMPLATE, " ", text)
     ngrams = []
     for i in range(len(text) - n + 1):
-        ngrams.append(text[i:i+n])
+        ngrams.append(text[i:i + n])
     frequency_dictionary = dict(Counter(ngrams))
     sorted_frequencies = sorted(frequency_dictionary.items(), key=lambda item: item[1], reverse=True)
     return sorted_frequencies[:k]

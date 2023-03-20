@@ -12,15 +12,18 @@ def main():
             print("You've chosen to read test_text.txt")
             text = read_text(FILE_DIRECTORY)
         correct_input = False
-        k = 0
-        n = 0
-        while not correct_input:
-            try:
-                k = int(input("Enter K to find top-K repeated N-grams: "))
-                n = int(input("Enter N to find top-K repeated N-grams: "))
-                correct_input = True
-            except ValueError:
-                print("Incorrect input! Try again.")
+        if input("Do you want to enter K, N to find top-K repeated N-grams? y/n ") == "y":
+            while not correct_input:
+                try:
+                    k = int(input("Enter K to find top-K repeated N-grams: "))
+                    n = int(input("Enter N to find top-K repeated N-grams: "))
+                    correct_input = True
+                except ValueError:
+                    print("Incorrect input! Try again.")
+        else:
+            k = 10
+            n = 4
+            print("Variables were set to default settings: K = 10, N = 4")
         print("\nSTATISTICS OF THE TEXT\n"
               "Sentences amount: {}\n"
               "Non-declarative sentences amount: {}\n"
