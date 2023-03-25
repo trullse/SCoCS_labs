@@ -1,5 +1,6 @@
 from storage import Storage
 from constants import ADD, REMOVE, FIND, LIST, GREP, SAVE, LOAD, SWITCH
+from exceptions import UserError, OperandError
 
 
 class StorageCLI:
@@ -10,18 +11,47 @@ class StorageCLI:
 
     def command_handler(self, command: str):
         operands = command.split()
-        if operands[0] == ADD:
-            operands = operands[1:]
-            self.add_handler(operands)
-        elif operands[0] == SWITCH:
-            operands = operands[1:]
-            self.switch_handler(operands)
+        try:
+            if operands[0] == ADD:
+                self.add_handler(operands[1:])
+            elif operands[0] == LIST:
+                self.list_handler(operands[1:])
+            elif operands[0] == SWITCH:
+                self.switch_handler(operands[1:])
+        except IndexError:
+            print("Command wasn't found.")
+        except UserError:
+            print("User wasn't selected. Register using 'switch'.")
+        except OperandError:
+            print("Incorrect operand(s).")
 
     def add_handler(self, operands):
-        try:
-            self.storage.add(operands)
-        except AttributeError:
-            print("User wasn't selected. Register using 'switch'.")
+        if len(operands) == 0:
+            raise OperandError
+        self.storage.add(operands)
+
+    def list_handler(self, operands):
+        if len(operands) > 0:
+            raise OperandError
+        print(self.storage.list())
 
     def switch_handler(self, operands):
-        pass
+        if len(operands) == 0 or len(operands) > 1:
+            raise OperandError
+        if self.storage.user_selected():
+            if self._get_choice("Do you want to save changes?"):
+                self.storage.save_changes()
+        self.storage.switch_user(operands[0])
+        if self._get_choice("Do you want to load the existing container?"):
+            self.storage.load_container()
+
+    def _get_choice(self, message: str):
+        print(message + " Y/n ")
+        while True:
+            answer = input()
+            if answer == "Y" or answer == "y":
+                return True
+            elif answer == "N" or answer == "n":
+                return False
+            else:
+                print("Unknown command. " + message + " Y/n ")
