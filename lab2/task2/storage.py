@@ -1,23 +1,26 @@
 from re import search
+from exceptions import UserError
 
 
 class Storage:
-    __storage: set
+    __storage: dict
+    __current_user: str
+    __current_container: set
 
     def __init__(self):
-        self.__storage = set()
+        self.__storage = dict()
 
     def add(self, key):
         if isinstance(key, str):
-            self.__storage.add(key)
+            self.__current_container.add(key)
         elif isinstance(key, list):
-            self.__storage.update(key)
+            self.__current_container.update(key)
 
-    def contains(self, key):
-        return key in self.__storage
+    def contains(self,  key):
+        return key in self.__current_container
 
     def remove(self, key):          # use try .. catch
-        self.__storage.remove(key)
+        self.__current_container.remove(key)
 
     def find(self, key):
         find_result = list()
@@ -31,11 +34,30 @@ class Storage:
         return find_result
 
     def list(self):
-        return list(self.__storage)
+        return list(self.__current_container)
 
     def grep(self, regex):
         grep_result = list()
-        for key in self.__storage:
+        for key in self.__current_container:
             if search(regex, key) is not None:
                 grep_result.append(key)
         return grep_result
+
+    def load_container(self):
+        if self.__current_user is None:
+            raise UserError
+        if self.__storage[self.__current_user] is None:
+            self.__storage[self.__current_user] = set()
+        if len(self.__current_container) == 0:
+            self.__current_container = self.__storage[self.__current_user].copy()
+        if len(self.__current_container) != 0:
+            self.__current_container.update(self.__storage[self.__current_user])
+
+    def switch_user(self, username: str):
+        self.__current_user = username
+        self.__current_container = set()
+
+    def save_changes(self):
+        if self.__current_user is None:
+            raise UserError
+        self.__storage[self.__current_user] = self.__current_container
