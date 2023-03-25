@@ -1,4 +1,5 @@
 from re import search
+from exceptions import UserError, OperandError
 
 
 class Storage:
@@ -8,20 +9,31 @@ class Storage:
 
     def __init__(self):
         self.__storage = dict()
+        self.__current_user = str()
 
     def add(self, key):
+        if not self.user_selected():
+            raise UserError
         if isinstance(key, str):
             self.__current_container.add(key)
         elif isinstance(key, list):
+            if len(key) == 0:
+                raise OperandError
             self.__current_container.update(key)
 
     def contains(self,  key):
+        if not self.user_selected():
+            raise UserError
         return key in self.__current_container
 
     def remove(self, key):          # use try .. catch
+        if not self.user_selected():
+            raise UserError
         self.__current_container.remove(key)
 
     def find(self, key):
+        if not self.user_selected():
+            raise UserError
         find_result = list()
         if isinstance(key, str):
             if self.contains(key):
@@ -33,9 +45,13 @@ class Storage:
         return find_result
 
     def list(self):
+        if not self.user_selected():
+            raise UserError
         return list(self.__current_container)
 
     def grep(self, regex):
+        if not self.user_selected():
+            raise UserError
         grep_result = list()
         for key in self.__current_container:
             if search(regex, key) is not None:
@@ -43,7 +59,7 @@ class Storage:
         return grep_result
 
     def load_container(self):
-        if self.__storage[self.__current_user] is None:
+        if self.__current_user not in self.__storage:
             self.__storage[self.__current_user] = set()
         if len(self.__current_container) == 0:
             self.__current_container = self.__storage[self.__current_user].copy()
@@ -55,4 +71,12 @@ class Storage:
         self.__current_container = set()
 
     def save_changes(self):
+        if not self.user_selected():
+            raise UserError
         self.__storage[self.__current_user] = self.__current_container
+
+    def user_selected(self):
+        if len(self.__current_user) == 0:
+            return False
+        else:
+            return True
