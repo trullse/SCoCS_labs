@@ -11,18 +11,26 @@ class Storage:
         self.__storage = dict()
 
     def add(self, key):
+        if self.__current_user is None:
+            raise UserError
         if isinstance(key, str):
             self.__current_container.add(key)
         elif isinstance(key, list):
             self.__current_container.update(key)
 
     def contains(self,  key):
+        if self.__current_user is None:
+            raise UserError
         return key in self.__current_container
 
     def remove(self, key):          # use try .. catch
+        if self.__current_user is None:
+            raise UserError
         self.__current_container.remove(key)
 
     def find(self, key):
+        if self.__current_user is None:
+            raise UserError
         find_result = list()
         if isinstance(key, str):
             if self.contains(key):
@@ -34,9 +42,13 @@ class Storage:
         return find_result
 
     def list(self):
+        if self.__current_user is None:
+            raise UserError
         return list(self.__current_container)
 
     def grep(self, regex):
+        if self.__current_user is None:
+            raise UserError
         grep_result = list()
         for key in self.__current_container:
             if search(regex, key) is not None:
