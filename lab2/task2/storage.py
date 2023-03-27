@@ -80,3 +80,22 @@ class Storage:
             return False
         else:
             return True
+
+    def container_is_empty_or_none(self, container_name=None):
+        if container_name is None:
+            if self.user_selected() and len(self.__current_container) != 0:
+                return False
+            else:
+                return True
+        else:
+            if container_name in self.__storage and len(self.__storage[container_name]) != 0:
+                return False
+            else:
+                return True
+
+    def container_has_changes(self):
+        if not self.user_selected():
+            raise UserError
+        if self.__current_user in self.__storage and self.__current_container == self.__storage[self.__current_user]:
+            return False
+        return True

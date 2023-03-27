@@ -38,11 +38,12 @@ class StorageCLI:
     def switch_handler(self, operands):
         if len(operands) == 0 or len(operands) > 1:
             raise OperandError
-        if self.storage.user_selected():
+        if self.storage.user_selected() and self.storage.container_has_changes():
             if self._get_choice("Do you want to save changes?"):
                 self.storage.save_changes()
         self.storage.switch_user(operands[0])
-        if self._get_choice("Do you want to load the existing container?"):
+        if not self.storage.container_is_empty_or_none(operands[0]) \
+                and self._get_choice("Do you want to load the existing container?"):
             self.storage.load_container()
 
     def _get_choice(self, message: str):
