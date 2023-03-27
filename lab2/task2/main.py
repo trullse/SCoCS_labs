@@ -3,6 +3,6 @@ from storageCLI import StorageCLI
 
 
 storage = StorageCLI()
-while True:
+command = str(input())
+while storage.command_handler(command):
     command = str(input())
-    storage.command_handler(command)

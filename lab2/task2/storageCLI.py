@@ -1,5 +1,5 @@
 from storage import Storage
-from constants import ADD, REMOVE, FIND, LIST, GREP, SAVE, LOAD, SWITCH
+from constants import ADD, REMOVE, FIND, LIST, GREP, SAVE, LOAD, SWITCH, EXIT
 from exceptions import UserError, OperandError
 
 
@@ -22,6 +22,8 @@ class StorageCLI:
                 self.list_handler(operands[1:])
             elif operands[0] == SWITCH:
                 self.switch_handler(operands[1:])
+            elif operands[0] == EXIT:
+                return False
         except IndexError:
             print("Command wasn't found.")
         except UserError:
@@ -30,6 +32,7 @@ class StorageCLI:
             print("Incorrect operand(s).")
         except KeyError:
             print("The key wasn't found.")
+        return True
 
     def add_handler(self, operands):
         if len(operands) == 0:
