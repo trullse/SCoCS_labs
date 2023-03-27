@@ -14,6 +14,10 @@ class StorageCLI:
         try:
             if operands[0] == ADD:
                 self.add_handler(operands[1:])
+            elif operands[0] == REMOVE:
+                self.remove_handler(operands[1:])
+            elif operands[0] == FIND:
+                self.find_handler(operands[1:])
             elif operands[0] == LIST:
                 self.list_handler(operands[1:])
             elif operands[0] == SWITCH:
@@ -24,11 +28,27 @@ class StorageCLI:
             print("User wasn't selected. Register using 'switch'.")
         except OperandError:
             print("Incorrect operand(s).")
+        except KeyError:
+            print("The key wasn't found.")
 
     def add_handler(self, operands):
         if len(operands) == 0:
             raise OperandError
         self.storage.add(operands)
+
+    def remove_handler(self, operands):
+        if len(operands) != 1:
+            raise OperandError
+        self.storage.remove(operands[0])
+
+    def find_handler(self, operands):
+        if len(operands) == 0:
+            raise OperandError
+        result = self.storage.find(operands)
+        if len(result) != 0:
+            print("Found keys:\n{}".format(result))
+        else:
+            print("No keys found.")
 
     def list_handler(self, operands):
         if len(operands) > 0:
@@ -36,7 +56,7 @@ class StorageCLI:
         print(self.storage.list())
 
     def switch_handler(self, operands):
-        if len(operands) == 0 or len(operands) > 1:
+        if len(operands) != 1:
             raise OperandError
         if self.storage.user_selected() and self.storage.container_has_changes():
             if self._get_choice("Do you want to save changes?"):
