@@ -24,6 +24,10 @@ class StorageCLI:
                 self.grep_handler(operands[1:])
             elif operands[0] == SWITCH:
                 self.switch_handler(operands[1:])
+            elif operands[0] == SAVE:
+                self.save_handler(operands[1:])
+            elif operands[0] == LOAD:
+                self.load_handler(operands[1:])
             elif operands[0] == EXIT:
                 return False
         except IndexError:
@@ -79,6 +83,16 @@ class StorageCLI:
         if not self.storage.container_is_empty_or_none(operands[0]) \
                 and self._get_choice("Do you want to load the existing container?"):
             self.storage.load_container()
+
+    def save_handler(self, operands):
+        if len(operands) != 1:
+            raise OperandError
+        self.storage.save_to_file(operands[0])
+
+    def load_handler(self, operands):
+        if len(operands) != 1:
+            raise OperandError
+        self.storage.load_from_file(operands[0])
 
     def _get_choice(self, message: str):
         print(message + " Y/n ")
