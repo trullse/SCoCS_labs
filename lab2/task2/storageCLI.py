@@ -20,6 +20,8 @@ class StorageCLI:
                 self.find_handler(operands[1:])
             elif operands[0] == LIST:
                 self.list_handler(operands[1:])
+            elif operands[0] == GREP:
+                self.grep_handler(operands[1:])
             elif operands[0] == SWITCH:
                 self.switch_handler(operands[1:])
             elif operands[0] == EXIT:
@@ -54,9 +56,18 @@ class StorageCLI:
             print("No keys found.")
 
     def list_handler(self, operands):
-        if len(operands) > 0:
+        if len(operands) != 0:
             raise OperandError
         print(self.storage.list())
+
+    def grep_handler(self, operands):
+        if len(operands) != 1:
+            raise OperandError
+        result = self.storage.grep(operands[0])
+        if len(result) != 0:
+            print("Grep result:\n{}".format(result))
+        else:
+            print("No matches found.")
 
     def switch_handler(self, operands):
         if len(operands) != 1:
