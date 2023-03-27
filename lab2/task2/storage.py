@@ -1,4 +1,5 @@
 from re import search
+from json import dump, load
 from exceptions import UserError, OperandError
 
 
@@ -74,6 +75,14 @@ class Storage:
         if not self.user_selected():
             raise UserError
         self.__storage[self.__current_user] = self.__current_container
+
+    def save_to_file(self, path):
+        with open(path, "w") as f:
+            dump(list(self.__current_container), f)
+
+    def load_from_file(self, path):
+        with open(path, "r") as f:
+            self.__current_container.update(load(f))
 
     def user_selected(self):
         if len(self.__current_user) == 0:
