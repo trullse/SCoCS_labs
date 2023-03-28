@@ -32,6 +32,8 @@ class StorageCLI:
             elif operands[0] == EXIT:
                 self.exit_handler(operands[1:])
                 return False
+            else:
+                print("'{}' is not a command. Write 'help' to see the commands.".format(operands[0]))
         except IndexError:
             print("Command wasn't found.")
         except UserError:
