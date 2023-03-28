@@ -29,6 +29,7 @@ class StorageCLI:
             elif operands[0] == LOAD:
                 self.load_handler(operands[1:])
             elif operands[0] == EXIT:
+                self.exit_handler(operands[1:])
                 return False
         except IndexError:
             print("Command wasn't found.")
@@ -93,6 +94,13 @@ class StorageCLI:
         if len(operands) != 0:
             raise OperandError
         self.storage.load_container()
+
+    def exit_handler(self, operands):
+        if len(operands) != 0:
+            raise OperandError
+        if self.storage.user_selected() and self.storage.container_has_changes():
+            if self._get_choice("Do you want to save changes?"):
+                self.storage.save_changes()
 
     def _get_choice(self, message: str):
         print(message + " Y/n ")
