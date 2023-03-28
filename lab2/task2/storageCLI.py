@@ -80,19 +80,19 @@ class StorageCLI:
             if self._get_choice("Do you want to save changes?"):
                 self.storage.save_changes()
         self.storage.switch_user(operands[0])
-        if not self.storage.container_is_empty_or_none(operands[0]) \
+        if not self.storage.container_is_empty(operands[0]) \
                 and self._get_choice("Do you want to load the existing container?"):
             self.storage.load_container()
 
     def save_handler(self, operands):
-        if len(operands) != 1:
+        if len(operands) != 0:
             raise OperandError
-        self.storage.save_to_file(operands[0])
+        self.storage.save_changes()
 
     def load_handler(self, operands):
-        if len(operands) != 1:
+        if len(operands) != 0:
             raise OperandError
-        self.storage.load_from_file(operands[0])
+        self.storage.load_container()
 
     def _get_choice(self, message: str):
         print(message + " Y/n ")

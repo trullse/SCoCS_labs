@@ -1,15 +1,15 @@
+import json
 from re import search
-from json import dump, load
+from json import dump, load, JSONDecodeError
 from exceptions import UserError, OperandError
+from constants import SAVE_PATH
 
 
 class Storage:
-    __storage: dict
     __current_user: str
     __current_container: set
 
     def __init__(self):
-        self.__storage = dict()
         self.__current_user = str()
 
     def add(self, key):
@@ -27,7 +27,7 @@ class Storage:
             raise UserError
         return key in self.__current_container
 
-    def remove(self, key):          # use try .. catch
+    def remove(self, key):
         if not self.user_selected():
             raise UserError
         self.__current_container.remove(key)
@@ -60,12 +60,10 @@ class Storage:
         return grep_result
 
     def load_container(self):
-        if self.__current_user not in self.__storage:
-            self.__storage[self.__current_user] = set()
-        if len(self.__current_container) == 0:
-            self.__current_container = self.__storage[self.__current_user].copy()
-        if len(self.__current_container) != 0:
-            self.__current_container.update(self.__storage[self.__current_user])
+        if not self.user_selected():
+            raise UserError
+        with open(SAVE_PATH + self.__current_user + ".json", "r") as f:
+            self.__current_container.update(load(f))
 
     def switch_user(self, username: str):
         self.__current_user = username
@@ -74,15 +72,8 @@ class Storage:
     def save_changes(self):
         if not self.user_selected():
             raise UserError
-        self.__storage[self.__current_user] = self.__current_container
-
-    def save_to_file(self, path):
-        with open(path, "w") as f:
+        with open(SAVE_PATH + self.__current_user + ".json", "w") as f:
             dump(list(self.__current_container), f)
-
-    def load_from_file(self, path):
-        with open(path, "r") as f:
-            self.__current_container.update(load(f))
 
     def user_selected(self):
         if len(self.__current_user) == 0:
@@ -90,21 +81,24 @@ class Storage:
         else:
             return True
 
-    def container_is_empty_or_none(self, container_name=None):
-        if container_name is None:
-            if self.user_selected() and len(self.__current_container) != 0:
-                return False
-            else:
-                return True
-        else:
-            if container_name in self.__storage and len(self.__storage[container_name]) != 0:
-                return False
-            else:
-                return True
+    def container_is_empty(self, container_name):
+        try:
+            with open(SAVE_PATH + container_name + ".json") as f:
+                if len(load(f)) == 0:
+                    return True
+                else:
+                    return False
+        except FileNotFoundError or JSONDecodeError:
+            return True
 
     def container_has_changes(self):
         if not self.user_selected():
             raise UserError
-        if self.__current_user in self.__storage and self.__current_container == self.__storage[self.__current_user]:
-            return False
-        return True
+        try:
+            with open(SAVE_PATH + self.__current_user + ".json", "r") as f:
+                if self.__current_container == set(load(f)):
+                    return False
+                else:
+                    return True
+        except FileNotFoundError or JSONDecodeError:
+            return True
