@@ -14,25 +14,25 @@ class StorageCLI:
         operands = command.split()
         try:
             if operands[0] == ADD:
-                self.add_handler(operands[1:])
+                self._add_handler(operands[1:])
             elif operands[0] == REMOVE:
-                self.remove_handler(operands[1:])
+                self._remove_handler(operands[1:])
             elif operands[0] == FIND:
-                self.find_handler(operands[1:])
+                self._find_handler(operands[1:])
             elif operands[0] == LIST:
-                self.list_handler(operands[1:])
+                self._list_handler(operands[1:])
             elif operands[0] == GREP:
-                self.grep_handler(operands[1:])
+                self._grep_handler(operands[1:])
             elif operands[0] == SWITCH:
-                self.switch_handler(operands[1:])
+                self._switch_handler(operands[1:])
             elif operands[0] == SAVE:
-                self.save_handler(operands[1:])
+                self._save_handler(operands[1:])
             elif operands[0] == LOAD:
-                self.load_handler(operands[1:])
+                self._load_handler(operands[1:])
             elif operands[0] == HELP:
-                self.help_handler(operands[1:])
+                self._help_handler(operands[1:])
             elif operands[0] == EXIT:
-                self.exit_handler(operands[1:])
+                self._exit_handler(operands[1:])
                 return False
             else:
                 print("'{}' is not a command. Write 'help' to see the commands.".format(operands[0]))
@@ -50,17 +50,17 @@ class StorageCLI:
             print("The file is broken.")
         return True
 
-    def add_handler(self, operands):
+    def _add_handler(self, operands):
         if len(operands) == 0:
             raise OperandError
         self.storage.add(operands)
 
-    def remove_handler(self, operands):
+    def _remove_handler(self, operands):
         if len(operands) != 1:
             raise OperandError
         self.storage.remove(operands[0])
 
-    def find_handler(self, operands):
+    def _find_handler(self, operands):
         if len(operands) == 0:
             raise OperandError
         result = self.storage.find(operands)
@@ -69,12 +69,12 @@ class StorageCLI:
         else:
             print("No keys found.")
 
-    def list_handler(self, operands):
+    def _list_handler(self, operands):
         if len(operands) != 0:
             raise OperandError
         print(self.storage.list())
 
-    def grep_handler(self, operands):
+    def _grep_handler(self, operands):
         if len(operands) != 1:
             raise OperandError
         result = self.storage.grep(operands[0])
@@ -83,7 +83,7 @@ class StorageCLI:
         else:
             print("No matches found.")
 
-    def switch_handler(self, operands):
+    def _switch_handler(self, operands):
         if len(operands) != 1:
             raise OperandError
         if self.storage.user_selected() and self.storage.container_has_changes():
@@ -94,17 +94,17 @@ class StorageCLI:
                 and self._get_choice("Do you want to load the existing container?"):
             self.storage.load_container()
 
-    def save_handler(self, operands):
+    def _save_handler(self, operands):
         if len(operands) != 0:
             raise OperandError
         self.storage.save_changes()
 
-    def load_handler(self, operands):
+    def _load_handler(self, operands):
         if len(operands) != 0:
             raise OperandError
         self.storage.load_container()
 
-    def help_handler(self, operands):
+    def _help_handler(self, operands):
         if len(operands) != 0:
             raise OperandError
         print("This is an interactive CLI program which plays the role of a storage for unique elements and support "
@@ -113,7 +113,7 @@ class StorageCLI:
         for command in COMMANDS_HELP:
             print("  {:{}s}{}".format(command[0], indent, command[1]))
 
-    def exit_handler(self, operands):
+    def _exit_handler(self, operands):
         if len(operands) != 0:
             raise OperandError
         if self.storage.user_selected() and self.storage.container_has_changes():

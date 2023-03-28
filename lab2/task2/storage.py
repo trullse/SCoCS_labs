@@ -6,31 +6,31 @@ from constants import SAVE_PATH, FILE_EXTENSION
 
 
 class Storage:
-    __current_user: str
-    __current_container: set
+    _current_user: str
+    _current_container: set
 
     def __init__(self):
-        self.__current_user = str()
+        self._current_user = str()
 
     def add(self, key):
         if not self.user_selected():
             raise UserError
         if isinstance(key, str):
-            self.__current_container.add(key)
+            self._current_container.add(key)
         elif isinstance(key, list):
             if len(key) == 0:
                 raise OperandError
-            self.__current_container.update(key)
+            self._current_container.update(key)
 
     def contains(self,  key):
         if not self.user_selected():
             raise UserError
-        return key in self.__current_container
+        return key in self._current_container
 
     def remove(self, key):
         if not self.user_selected():
             raise UserError
-        self.__current_container.remove(key)
+        self._current_container.remove(key)
 
     def find(self, key):
         if not self.user_selected():
@@ -48,13 +48,13 @@ class Storage:
     def list(self):
         if not self.user_selected():
             raise UserError
-        return list(self.__current_container)
+        return list(self._current_container)
 
     def grep(self, regex):
         if not self.user_selected():
             raise UserError
         grep_result = list()
-        for key in self.__current_container:
+        for key in self._current_container:
             if search(regex, key) is not None:
                 grep_result.append(key)
         return grep_result
@@ -62,21 +62,21 @@ class Storage:
     def load_container(self):
         if not self.user_selected():
             raise UserError
-        with open(SAVE_PATH + self.__current_user + FILE_EXTENSION, "r") as f:
-            self.__current_container.update(load(f))
+        with open(SAVE_PATH + self._current_user + FILE_EXTENSION, "r") as f:
+            self._current_container.update(load(f))
 
     def switch_user(self, username: str):
-        self.__current_user = username
-        self.__current_container = set()
+        self._current_user = username
+        self._current_container = set()
 
     def save_changes(self):
         if not self.user_selected():
             raise UserError
-        with open(SAVE_PATH + self.__current_user + FILE_EXTENSION, "w") as f:
-            dump(list(self.__current_container), f)
+        with open(SAVE_PATH + self._current_user + FILE_EXTENSION, "w") as f:
+            dump(list(self._current_container), f)
 
     def user_selected(self):
-        if len(self.__current_user) == 0:
+        if len(self._current_user) == 0:
             return False
         else:
             return True
@@ -97,8 +97,8 @@ class Storage:
         if not self.user_selected():
             raise UserError
         try:
-            with open(SAVE_PATH + self.__current_user + FILE_EXTENSION, "r") as f:
-                if self.__current_container == set(load(f)):
+            with open(SAVE_PATH + self._current_user + FILE_EXTENSION, "r") as f:
+                if self._current_container == set(load(f)):
                     return False
                 else:
                     return True
