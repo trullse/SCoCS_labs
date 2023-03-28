@@ -2,7 +2,7 @@ import json
 from re import search
 from json import dump, load, JSONDecodeError
 from exceptions import UserError, OperandError
-from constants import SAVE_PATH
+from constants import SAVE_PATH, FILE_EXTENSION
 
 
 class Storage:
@@ -62,7 +62,7 @@ class Storage:
     def load_container(self):
         if not self.user_selected():
             raise UserError
-        with open(SAVE_PATH + self.__current_user + ".json", "r") as f:
+        with open(SAVE_PATH + self.__current_user + FILE_EXTENSION, "r") as f:
             self.__current_container.update(load(f))
 
     def switch_user(self, username: str):
@@ -72,7 +72,7 @@ class Storage:
     def save_changes(self):
         if not self.user_selected():
             raise UserError
-        with open(SAVE_PATH + self.__current_user + ".json", "w") as f:
+        with open(SAVE_PATH + self.__current_user + FILE_EXTENSION, "w") as f:
             dump(list(self.__current_container), f)
 
     def user_selected(self):
@@ -83,7 +83,7 @@ class Storage:
 
     def file_is_empty(self, container_name):
         try:
-            with open(SAVE_PATH + container_name + ".json") as f:
+            with open(SAVE_PATH + container_name + FILE_EXTENSION, "r") as f:
                 if len(load(f)) == 0:
                     return True
                 else:
@@ -97,7 +97,7 @@ class Storage:
         if not self.user_selected():
             raise UserError
         try:
-            with open(SAVE_PATH + self.__current_user + ".json", "r") as f:
+            with open(SAVE_PATH + self.__current_user + FILE_EXTENSION, "r") as f:
                 if self.__current_container == set(load(f)):
                     return False
                 else:
