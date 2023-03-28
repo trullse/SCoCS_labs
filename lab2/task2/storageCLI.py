@@ -1,6 +1,7 @@
 from storage import Storage
 from constants import ADD, REMOVE, FIND, LIST, GREP, SAVE, LOAD, SWITCH, EXIT
 from exceptions import UserError, OperandError
+from json import JSONDecodeError
 
 
 class StorageCLI:
@@ -39,6 +40,10 @@ class StorageCLI:
             print("Incorrect operand(s).")
         except KeyError:
             print("The key wasn't found.")
+        except FileNotFoundError:
+            print("The file is not found.")
+        except JSONDecodeError:
+            print("The file is broken.")
         return True
 
     def add_handler(self, operands):
@@ -81,7 +86,7 @@ class StorageCLI:
             if self._get_choice("Do you want to save changes?"):
                 self.storage.save_changes()
         self.storage.switch_user(operands[0])
-        if not self.storage.container_is_empty(operands[0]) \
+        if not self.storage.file_is_empty(operands[0]) \
                 and self._get_choice("Do you want to load the existing container?"):
             self.storage.load_container()
 

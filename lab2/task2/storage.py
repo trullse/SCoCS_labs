@@ -81,15 +81,17 @@ class Storage:
         else:
             return True
 
-    def container_is_empty(self, container_name):
+    def file_is_empty(self, container_name):
         try:
             with open(SAVE_PATH + container_name + ".json") as f:
                 if len(load(f)) == 0:
                     return True
                 else:
                     return False
-        except FileNotFoundError or JSONDecodeError:
+        except FileNotFoundError:
             return True
+        except JSONDecodeError:
+            return False
 
     def container_has_changes(self):
         if not self.user_selected():
@@ -100,5 +102,5 @@ class Storage:
                     return False
                 else:
                     return True
-        except FileNotFoundError or JSONDecodeError:
+        except (FileNotFoundError, json.JSONDecodeError):
             return True
