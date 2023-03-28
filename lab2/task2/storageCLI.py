@@ -1,5 +1,5 @@
 from storage import Storage
-from constants import ADD, REMOVE, FIND, LIST, GREP, SAVE, LOAD, SWITCH, EXIT
+from constants import ADD, REMOVE, FIND, LIST, GREP, SAVE, LOAD, SWITCH, HELP, EXIT, COMMANDS_HELP
 from exceptions import UserError, OperandError
 from json import JSONDecodeError
 
@@ -29,6 +29,8 @@ class StorageCLI:
                 self.save_handler(operands[1:])
             elif operands[0] == LOAD:
                 self.load_handler(operands[1:])
+            elif operands[0] == HELP:
+                self.help_handler(operands[1:])
             elif operands[0] == EXIT:
                 self.exit_handler(operands[1:])
                 return False
@@ -101,6 +103,15 @@ class StorageCLI:
         if len(operands) != 0:
             raise OperandError
         self.storage.load_container()
+
+    def help_handler(self, operands):
+        if len(operands) != 0:
+            raise OperandError
+        print("This is an interactive CLI program which plays the role of a storage for unique elements and support "
+              "a list of the following commands:")
+        indent = max(len(command[0]) for command in COMMANDS_HELP) + 5
+        for command in COMMANDS_HELP:
+            print("  {:{}s}{}".format(command[0], indent, command[1]))
 
     def exit_handler(self, operands):
         if len(operands) != 0:
