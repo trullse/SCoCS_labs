@@ -1,8 +1,10 @@
 import json
+import os
 from re import search
 from json import dump, load, JSONDecodeError
 from exceptions import UserError, OperandError
 from constants import SAVE_PATH, FILE_EXTENSION
+from os import path, mkdir
 
 
 class Storage:
@@ -72,6 +74,8 @@ class Storage:
     def save_changes(self):
         if not self.user_selected():
             raise UserError
+        if not path.exists(SAVE_PATH):
+            mkdir(SAVE_PATH)
         with open(SAVE_PATH + self._current_user + FILE_EXTENSION, "w") as f:
             dump(list(self._current_container), f)
 
