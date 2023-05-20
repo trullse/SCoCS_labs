@@ -1,5 +1,3 @@
-import json
-import os
 from re import search
 from json import dump, load, JSONDecodeError
 from exceptions import UserError, OperandError
@@ -106,5 +104,5 @@ class Storage:
                     return False
                 else:
                     return True
-        except (FileNotFoundError, json.JSONDecodeError):
+        except (FileNotFoundError, JSONDecodeError):
             return True

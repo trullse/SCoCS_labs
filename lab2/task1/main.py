@@ -1,5 +1,9 @@
-from statistics import get_sentences_amount, get_non_declarative_amount, get_sentences_length, get_word_length, \
-    get_top_k_ngrams, read_text
+from statistics import (get_sentences_amount,
+                        get_non_declarative_amount,
+                        get_sentences_length,
+                        get_word_length,
+                        get_top_k_ngrams,
+                        read_text)
 from constants import FILE_DIRECTORY
 
 

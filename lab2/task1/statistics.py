@@ -1,6 +1,12 @@
 import re
-from constants import SENTENCE_TEMPLATE, ABBREVIATIONS, END_ABBREVIATIONS, INITIALS_TEMPLATE, NON_DECLARATIVE_TEMPLATE, \
-    WORD_TEMPLATE, NUMBER_TEMPLATE, NEWLINE_TEMPLATE
+from constants import (SENTENCE_TEMPLATE,
+                       ABBREVIATIONS,
+                       END_ABBREVIATIONS,
+                       INITIALS_TEMPLATE,
+                       NON_DECLARATIVE_TEMPLATE,
+                       WORD_TEMPLATE,
+                       NUMBER_TEMPLATE,
+                       NEWLINE_TEMPLATE)
 
 
 def get_sentences_amount(text: str):
@@ -22,6 +28,7 @@ def get_sentences_length(text: str):
         words_len += len(word)
     for num in re.findall(NUMBER_TEMPLATE, text):
         words_len -= len(num)
+
     return words_len / get_sentences_amount(text)
 
 
@@ -33,6 +40,7 @@ def get_word_length(text: str):
     nums = re.findall(NUMBER_TEMPLATE, text)
     for num in nums:
         words_len -= len(num)
+
     return words_len / (len(words) - len(nums))
 
 
