@@ -1,4 +1,4 @@
-from constants import PRIMITIVE_TYPES
+from lab3.serializer.constants import PRIMITIVE_TYPES
 
 
 class Converter:
