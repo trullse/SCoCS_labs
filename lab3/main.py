@@ -1,3 +1,5 @@
+import math
+
 from serializer.serializer import Serializer
 from serializer.converter import Converter
 from unittest import TestCase, main
@@ -8,6 +10,9 @@ def func(x):
     if x > 5:
         return x
     return a
+
+def func_with_module(x):
+    return math.sin(x)
 
 
 class PrimitiveTypesCheck(TestCase):
@@ -62,6 +67,12 @@ class PrimitiveTypesCheck(TestCase):
         func_back = Converter.convert_back(converted_func)
 
         return self.assertEqual(func_back(8), func(8)) and self.assertEqual(func_back(1), func(1))
+
+    def test_func_with_module(self):
+        converted_func = Converter.convert(func_with_module)
+        func_back = Converter.convert_back(converted_func)
+
+        return self.assertEqual(func_back(0), func_with_module(0))
 
 
 if __name__ == '__main__':

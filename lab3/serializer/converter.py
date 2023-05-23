@@ -3,7 +3,7 @@ import builtins
 import inspect
 
 from lab3.serializer.constants import PRIMITIVE_TYPES, BYTES_TYPE, TUPLE_TYPE, SET_TYPE, \
-    FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES
+    FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES, MODULE_TYPE
 from types import FunctionType, MethodType, CellType, CodeType, ModuleType
 
 
@@ -34,6 +34,9 @@ class Converter:
         if isinstance(obj, CodeType):
             return cls._convert_code(obj)
 
+        if isinstance(obj, ModuleType):
+            return cls._convert_module(obj)
+
         else:
             raise Exception(f"The {type(obj).__name__} type conversion is not implemented")
 
@@ -60,6 +63,8 @@ class Converter:
                 return cls._convert_back_cell(obj)
             if decode_type == CODE_TYPE:
                 return cls._convert_back_code(obj)
+            if decode_type == MODULE_TYPE:
+                return cls._convert_back_module(obj)
         raise Exception(f'The {decode_type} type back conversion is not implemented')
 
     @classmethod
@@ -155,6 +160,14 @@ class Converter:
 
         code_dict = cls.convert_back(data)
         return func.__code__.replace(**code_dict)
+
+    @classmethod
+    def _convert_module(cls, obj):
+        return cls._create_dict(obj.__name__, MODULE_TYPE)
+
+    @classmethod
+    def _convert_back_module(cls, obj):
+        return __import__(cls._get_data(obj))
 
     @staticmethod
     def _create_dict(data, _type, **additional):
