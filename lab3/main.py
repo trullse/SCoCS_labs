@@ -2,6 +2,7 @@ import math
 
 from serializer.serializer import Serializer
 from serializer.converter import Converter
+from serializer.constants import JSON_TYPE, XML_TYPE
 from unittest import TestCase, main
 
 
@@ -52,7 +53,7 @@ class PropertyClass:
 
 class PrimitiveTypesCheck(TestCase):
     def test_nums(self):
-        json_serializer = Serializer.create_serializer('json')
+        json_serializer = Serializer.create_serializer(JSON_TYPE)
         # xml_serializer = Serializer.create_serializer('xml')
 
         a = -324
@@ -75,6 +76,17 @@ class PrimitiveTypesCheck(TestCase):
 
         return self.assertEqual(a, json_converted_back_a) \
             and self.assertEqual(b, json_converted_back_b)
+
+    def test_string(self):
+        json_serializer = Serializer.create_serializer(JSON_TYPE)
+
+        string = 'Some string'
+
+        json_converted = json_serializer.dumps(string)
+
+        json_converted_back = json_serializer.loads(json_converted)
+
+        return self.assertEqual(string, json_converted_back)
 
     def test_list(self):
         # json_serializer = Serializer.create_serializer('json')
