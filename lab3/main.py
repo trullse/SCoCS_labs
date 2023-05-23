@@ -11,11 +11,14 @@ def func(x):
         return x
     return a
 
+
 class Class1:
     a = 13
 
+
 class Class2(Class1):
     b = 14
+
 
 class Class3(Class2):
     @classmethod
@@ -25,6 +28,9 @@ class Class3(Class2):
 
 def func_with_module(x):
     return math.sin(x)
+
+
+iterator = iter([1, 2, 3, 4, 5])
 
 
 class PrimitiveTypesCheck(TestCase):
@@ -103,6 +109,15 @@ class PrimitiveTypesCheck(TestCase):
         class_back = Converter.convert_back(converted_class)
 
         return self.assertEqual(Class3.sum(), class_back.sum())
+
+    def test_iter(self):
+        converted_iter = Converter.convert(iterator)
+        iterator_back = Converter.convert_back(converted_iter)
+
+        result = [1, 2, 3, 4, 5]
+        back_result = list(iterator_back)
+
+        return self.assertEqual(result, back_result)
 
 
 if __name__ == '__main__':

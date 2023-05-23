@@ -4,7 +4,7 @@ import inspect
 
 from lab3.serializer.constants import PRIMITIVE_TYPES, BYTES_TYPE, TUPLE_TYPE, SET_TYPE, \
     FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES, MODULE_TYPE, CLASS_TYPE, UNSERIALIZABLE_DUNDER, \
-    UNSERIALIZABLE_TYPES
+    UNSERIALIZABLE_TYPES, ITERATOR_TYPE
 from types import FunctionType, MethodType, CellType, CodeType, ModuleType
 
 
@@ -41,6 +41,9 @@ class Converter:
         if isinstance(obj, type):
             return cls._convert_class(obj)
 
+        if cls._is_iterable(obj):
+            return cls._convert_iterator(obj)
+
         else:
             raise Exception(f"The {type(obj).__name__} type conversion is not implemented")
 
@@ -71,6 +74,8 @@ class Converter:
                 return cls._convert_back_module(obj)
             if decode_type == CLASS_TYPE:
                 return cls._convert_back_class(obj)
+            if decode_type == ITERATOR_TYPE:
+                return cls._convert_back_iterator(obj)
         raise Exception(f'The {decode_type} type back conversion is not implemented')
 
     @classmethod
@@ -221,6 +226,16 @@ class Converter:
                 setattr(decoded_class, key, function)
         return decoded_class
 
+    @classmethod
+    def _convert_iterator(cls, obj):
+        data = list(map(cls.convert, obj))
+        return cls._create_dict(data, ITERATOR_TYPE)
+
+    @classmethod
+    def _convert_back_iterator(cls, obj):
+        data = cls._get_data(obj)
+        return iter(cls.convert_back(value) for value in data)
+
     # ----------- Helpers -------------
 
     @staticmethod
@@ -250,3 +265,7 @@ class Converter:
     @staticmethod
     def _make_cell(value):
         return (lambda: value).__closure__[0]
+
+    @staticmethod
+    def _is_iterable(obj):
+        return hasattr(obj, '__iter__') and hasattr(obj, '__next__') and callable(obj.__iter__)
