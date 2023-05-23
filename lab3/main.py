@@ -11,6 +11,18 @@ def func(x):
         return x
     return a
 
+class Class1:
+    a = 13
+
+class Class2(Class1):
+    b = 14
+
+class Class3(Class2):
+    @classmethod
+    def sum(cls):
+        return cls.a + cls.b
+
+
 def func_with_module(x):
     return math.sin(x)
 
@@ -73,6 +85,24 @@ class PrimitiveTypesCheck(TestCase):
         func_back = Converter.convert_back(converted_func)
 
         return self.assertEqual(func_back(0), func_with_module(0))
+
+    def test_class_simple(self):
+        converted_class = Converter.convert(Class1)
+        class_back = Converter.convert_back(converted_class)
+
+        return self.assertEqual(Class1.a, class_back.a)
+
+    def test_class_inherited(self):
+        converted_class = Converter.convert(Class2)
+        class_back = Converter.convert_back(converted_class)
+
+        return self.assertEqual(Class2.a, class_back.a) and self.assertEqual(Class2.b, class_back.b)
+
+    def test_class_with_method(self):
+        converted_class = Converter.convert(Class3)
+        class_back = Converter.convert_back(converted_class)
+
+        return self.assertEqual(Class3.sum(), class_back.sum())
 
 
 if __name__ == '__main__':

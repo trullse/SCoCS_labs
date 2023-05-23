@@ -3,7 +3,8 @@ import builtins
 import inspect
 
 from lab3.serializer.constants import PRIMITIVE_TYPES, BYTES_TYPE, TUPLE_TYPE, SET_TYPE, \
-    FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES, MODULE_TYPE
+    FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES, MODULE_TYPE, CLASS_TYPE, UNSERIALIZABLE_DUNDER, \
+    UNSERIALIZABLE_TYPES
 from types import FunctionType, MethodType, CellType, CodeType, ModuleType
 
 
@@ -37,6 +38,9 @@ class Converter:
         if isinstance(obj, ModuleType):
             return cls._convert_module(obj)
 
+        if isinstance(obj, type):
+            return cls._convert_class(obj)
+
         else:
             raise Exception(f"The {type(obj).__name__} type conversion is not implemented")
 
@@ -65,6 +69,8 @@ class Converter:
                 return cls._convert_back_code(obj)
             if decode_type == MODULE_TYPE:
                 return cls._convert_back_module(obj)
+            if decode_type == CLASS_TYPE:
+                return cls._convert_back_class(obj)
         raise Exception(f'The {decode_type} type back conversion is not implemented')
 
     @classmethod
@@ -168,6 +174,54 @@ class Converter:
     @classmethod
     def _convert_back_module(cls, obj):
         return __import__(cls._get_data(obj))
+
+    @classmethod
+    def _convert_class(cls, obj):
+        data = {
+            attr: cls.convert(getattr(obj, attr))
+            for attr, value in inspect.getmembers(obj)
+            if attr not in UNSERIALIZABLE_DUNDER
+            and type(value) not in UNSERIALIZABLE_TYPES
+        }
+
+        data['__bases__'] = [
+            cls.convert(base) for base in obj.__bases__ if base != object
+        ]
+
+        data['__name__'] = obj.__name__
+
+        return cls._create_dict(data, CLASS_TYPE)
+
+    @classmethod
+    def _convert_back_class(cls, obj):
+        data = cls._get_data(obj)
+
+        class_bases = tuple(cls.convert_back(base) for base in data.pop('__bases__'))
+
+        class_dict = {
+            attr: cls.convert_back(value)
+            for attr, value in data.items()
+            if not (isinstance(value, dict) and cls._get_type(value) == FUNCTION_TYPE)
+        }
+
+        decoded_class = type(data['__name__'], class_bases, class_dict)
+
+        for key, value in data.items():
+            if isinstance(value, dict) and cls._get_type(value) == FUNCTION_TYPE:
+                try:
+                    function = cls.convert_back(value)
+                except ValueError:
+                    closure = cls._get_data(value)['closure']
+                    cls._get_data(closure).append(cls._make_cell(decoded_class))
+                    function = cls.convert_back(value)
+                function.__globals__.update({decoded_class.__name__: decoded_class})
+                if value.get('is_method'):
+                    function = MethodType(function, decoded_class)
+
+                setattr(decoded_class, key, function)
+        return decoded_class
+
+    # ----------- Helpers -------------
 
     @staticmethod
     def _create_dict(data, _type, **additional):
