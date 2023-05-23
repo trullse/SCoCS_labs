@@ -33,6 +33,23 @@ def func_with_module(x):
 iterator = iter([1, 2, 3, 4, 5])
 
 
+class PropertyClass:
+    calls = 0
+
+    def __init__(self, temperature=0):
+        self.temperature = temperature
+
+    @property
+    def temperature(self):
+        self.calls += 1
+        return self._temperature
+
+    @temperature.setter
+    def temperature(self, value):
+        self.calls += 1
+        self._temperature = value
+
+
 class PrimitiveTypesCheck(TestCase):
     def test_nums(self):
         json_serializer = Serializer.create_serializer('json')
@@ -118,6 +135,21 @@ class PrimitiveTypesCheck(TestCase):
         back_result = list(iterator_back)
 
         return self.assertEqual(result, back_result)
+
+    def test_property(self):
+        converted_class = Converter.convert(PropertyClass)
+        class_back = Converter.convert_back(converted_class)
+
+        source = PropertyClass()
+        converted = class_back()
+
+        source.temperature = 5
+        temp = source.temperature
+
+        converted.temperature = 5
+        temp = converted.temperature
+
+        return self.assertEqual(source.calls, converted.calls)
 
 
 if __name__ == '__main__':

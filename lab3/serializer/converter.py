@@ -4,7 +4,7 @@ import inspect
 
 from lab3.serializer.constants import PRIMITIVE_TYPES, BYTES_TYPE, TUPLE_TYPE, SET_TYPE, \
     FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES, MODULE_TYPE, CLASS_TYPE, UNSERIALIZABLE_DUNDER, \
-    UNSERIALIZABLE_TYPES, ITERATOR_TYPE
+    UNSERIALIZABLE_TYPES, ITERATOR_TYPE, PROPERTY_TYPE
 from types import FunctionType, MethodType, CellType, CodeType, ModuleType
 
 
@@ -44,6 +44,9 @@ class Converter:
         if cls._is_iterable(obj):
             return cls._convert_iterator(obj)
 
+        if isinstance(obj, property):
+            return cls._convert_property(obj)
+
         else:
             raise Exception(f"The {type(obj).__name__} type conversion is not implemented")
 
@@ -76,6 +79,8 @@ class Converter:
                 return cls._convert_back_class(obj)
             if decode_type == ITERATOR_TYPE:
                 return cls._convert_back_iterator(obj)
+            if decode_type == PROPERTY_TYPE:
+                return cls._convert_back_property(obj)
         raise Exception(f'The {decode_type} type back conversion is not implemented')
 
     @classmethod
@@ -235,6 +240,20 @@ class Converter:
     def _convert_back_iterator(cls, obj):
         data = cls._get_data(obj)
         return iter(cls.convert_back(value) for value in data)
+
+    @classmethod
+    def _convert_property(cls, obj):
+        data = dict(
+            fget=cls.convert(obj.fget),
+            fset=cls.convert(obj.fset),
+            fdel=cls.convert(obj.fdel)
+        )
+        return cls._create_dict(data, PROPERTY_TYPE)
+
+    @classmethod
+    def _convert_back_property(cls, obj):
+        data = cls.convert_back(cls._get_data(obj))
+        return property(**data)
 
     # ----------- Helpers -------------
 
