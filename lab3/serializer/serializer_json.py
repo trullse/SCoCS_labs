@@ -60,6 +60,8 @@ class SerializerJson:
         elif obj[pos] == NULL[0]:
             pos += len(NULL)
             return None, pos
+        elif obj[pos] == '[':
+            return cls._convert_back_list(obj, pos)
         else:
             raise Exception(f"The type in position {pos} is undefined")
 
@@ -83,6 +85,27 @@ class SerializerJson:
             end_pos += 1
 
         return obj[start_pos:end_pos], end_pos + 1
+
+    @classmethod
+    def _convert_back_list(cls, obj, pos):
+        start_pos = end_pos = pos + 1
+        braces = 1
+        while braces != 0:
+            if obj[end_pos] == '[':
+                braces += 1
+            elif obj[end_pos] == ']':
+                braces -= 1
+
+            end_pos += 1
+
+        output_list = []
+        while start_pos < end_pos - 2:
+            while obj[start_pos] in (' ', ',', '\n'):
+                start_pos += 1
+            res, start_pos = cls._convert_back_from_json(obj, start_pos)
+            output_list.append(res)
+
+        return output_list, end_pos
 
     @staticmethod
     def _ignore_spaces(obj: str, pos: int):
