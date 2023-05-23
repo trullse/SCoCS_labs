@@ -4,7 +4,7 @@ import inspect
 
 from lab3.serializer.constants import PRIMITIVE_TYPES, BYTES_TYPE, TUPLE_TYPE, SET_TYPE, \
     FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES, MODULE_TYPE, CLASS_TYPE, UNSERIALIZABLE_DUNDER, \
-    UNSERIALIZABLE_TYPES, ITERATOR_TYPE, PROPERTY_TYPE
+    UNSERIALIZABLE_TYPES, ITERATOR_TYPE, PROPERTY_TYPE, OBJ_TYPE
 from types import FunctionType, MethodType, CellType, CodeType, ModuleType
 
 
@@ -47,6 +47,9 @@ class Converter:
         if isinstance(obj, property):
             return cls._convert_property(obj)
 
+        if isinstance(obj, object):
+            return cls._convert_object(obj)
+
         else:
             raise Exception(f"The {type(obj).__name__} type conversion is not implemented")
 
@@ -81,6 +84,8 @@ class Converter:
                 return cls._convert_back_iterator(obj)
             if decode_type == PROPERTY_TYPE:
                 return cls._convert_back_property(obj)
+            if decode_type == OBJ_TYPE:
+                return cls._convert_back_object(obj)
         raise Exception(f'The {decode_type} type back conversion is not implemented')
 
     @classmethod
@@ -254,6 +259,32 @@ class Converter:
     def _convert_back_property(cls, obj):
         data = cls.convert_back(cls._get_data(obj))
         return property(**data)
+
+    @classmethod
+    def _convert_object(cls, obj):
+        data = {
+            '__class__': cls.convert(obj.__class__),
+            '__attrs__': {
+                attr: cls.convert(value)
+                for attr, value in inspect.getmembers(obj)
+                if not attr.startswith('__')
+                and not isinstance(value, FunctionType)
+                and not isinstance(value, MethodType)
+            }
+        }
+        return cls._create_dict(data, OBJ_TYPE)
+
+    @classmethod
+    def _convert_back_object(cls, obj):
+        data = cls._get_data(obj)
+        obj_class = cls.convert_back(data['__class__'])
+
+        decoded_obj = object.__new__(obj_class)
+        decoded_obj.__dict__ = {
+            key: cls.convert_back(value) for key, value in data['attrs'].items()
+        }
+
+        return decoded_obj
 
     # ----------- Helpers -------------
 
