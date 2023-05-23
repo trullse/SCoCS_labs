@@ -98,14 +98,14 @@ class PrimitiveTypesCheck(TestCase):
         return self.assertEqual(list_, list_back)
 
     def test_collections(self):
-        # json_serializer = Serializer.create_serializer('json')
+        json_serializer = Serializer.create_serializer(JSON_TYPE)
 
         sett = {5, 6, 7}
         tuplee = (4, 6)
-        converted_set = Converter.convert(sett)
-        set_back = Converter.convert_back(converted_set)
-        converted_tuple = Converter.convert(tuplee)
-        tuple_back = Converter.convert_back(converted_tuple)
+        converted_set = json_serializer.dumps(sett)
+        set_back = json_serializer.loads(converted_set)
+        converted_tuple = json_serializer.dumps(tuplee)
+        tuple_back = json_serializer.loads(converted_tuple)
 
         return self.assertEqual(sett, set_back) and self.assertEqual(tuplee, tuple_back)
 
@@ -128,8 +128,10 @@ class PrimitiveTypesCheck(TestCase):
         return self.assertEqual(Class1.a, class_back.a)
 
     def test_class_inherited(self):
-        converted_class = Converter.convert(Class2)
-        class_back = Converter.convert_back(converted_class)
+        json_serializer = Serializer.create_serializer(JSON_TYPE)
+
+        converted_class = json_serializer.dumps(Class2)
+        class_back = json_serializer.loads(converted_class)
 
         return self.assertEqual(Class2.a, class_back.a) and self.assertEqual(Class2.b, class_back.b)
 

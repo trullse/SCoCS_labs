@@ -7,6 +7,8 @@ from lab3.serializer.constants import \
 
 
 class SerializerJson:
+    _converter = Converter()
+
     @classmethod
     def dump(cls, obj, file):
         file.write(cls.dumps(obj))
@@ -22,7 +24,7 @@ class SerializerJson:
     @classmethod
     def loads(cls, obj):
         result, pos = cls._convert_back_from_json(obj)
-        return result
+        return cls._converter.convert_back(result)
 
     @classmethod
     def _convert_to_json(cls, obj):
@@ -62,6 +64,8 @@ class SerializerJson:
             return None, pos
         elif obj[pos] == '[':
             return cls._convert_back_list(obj, pos)
+        elif obj[pos] == '{':
+            return cls._convert_back_dict(obj, pos)
         else:
             raise Exception(f"The type in position {pos} is undefined")
 
@@ -100,12 +104,37 @@ class SerializerJson:
 
         output_list = []
         while start_pos < end_pos - 2:
-            while obj[start_pos] in (' ', ',', '\n'):
+            while obj[start_pos] in (' ', ',', '\n', '\t'):
                 start_pos += 1
             res, start_pos = cls._convert_back_from_json(obj, start_pos)
             output_list.append(res)
 
         return output_list, end_pos
+
+    @classmethod
+    def _convert_back_dict(cls, obj, pos):
+        start_pos = end_pos = pos + 1
+        braces = 1
+        while braces != 0:
+            if obj[end_pos] == '{':
+                braces += 1
+            elif obj[end_pos] == '}':
+                braces -= 1
+
+            end_pos += 1
+
+        output_dict = {}
+        while start_pos < end_pos - 2:
+            while obj[start_pos] in (' ', ',', '\n', '\t'):
+                start_pos += 1
+            key, start_pos = cls._convert_back_from_json(obj, start_pos)
+            while obj[start_pos] in (' ', ',', '\n', '\t', ':'):
+                start_pos += 1
+            value, start_pos = cls._convert_back_from_json(obj, start_pos)
+
+            output_dict[key] = value
+
+        return output_dict, end_pos
 
     @staticmethod
     def _ignore_spaces(obj: str, pos: int):
