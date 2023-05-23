@@ -1,7 +1,10 @@
 import base64
 import builtins
+import inspect
 
-from lab3.serializer.constants import PRIMITIVE_TYPES, BYTES_TYPE, TUPLE_TYPE, SET_TYPE
+from lab3.serializer.constants import PRIMITIVE_TYPES, BYTES_TYPE, TUPLE_TYPE, SET_TYPE, \
+    FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES
+from types import FunctionType, MethodType, CellType, CodeType, ModuleType
 
 
 class Converter:
@@ -22,8 +25,17 @@ class Converter:
         if isinstance(obj, (tuple, set)):
             return cls._convert_collections(obj)
 
+        if isinstance(obj, (FunctionType, MethodType)):
+            return cls._convert_function(obj)
+
+        if isinstance(obj, CellType):
+            return cls._convert_cell(obj)
+
+        if isinstance(obj, CodeType):
+            return cls._convert_code(obj)
+
         else:
-            raise Exception("Not implemented")
+            raise Exception(f"The {type(obj).__name__} type conversion is not implemented")
 
     @classmethod
     def convert_back(cls, obj):
@@ -42,7 +54,13 @@ class Converter:
                 return cls._convert_back_bytes(obj)
             if decode_type in (TUPLE_TYPE, SET_TYPE):
                 return cls._convert_back_collections(obj)
-        raise Exception('This type back conversion is not implemented')
+            if decode_type == FUNCTION_TYPE:
+                return cls._convert_back_function(obj)
+            if decode_type == CELL_TYPE:
+                return cls._convert_back_cell(obj)
+            if decode_type == CODE_TYPE:
+                return cls._convert_back_code(obj)
+        raise Exception(f'The {decode_type} type back conversion is not implemented')
 
     @classmethod
     def _convert_bytes(cls, obj: bytes):
@@ -64,6 +82,80 @@ class Converter:
         collection = getattr(builtins, cls._get_type(obj).lower())
         return collection(cls.convert_back(item) for item in data)
 
+    @classmethod
+    def _convert_function(cls, obj):
+        func_code = obj.__code__
+        func_name = obj.__name__
+        func_defaults = obj.__defaults__
+        func_dict = obj.__dict__
+        func_class = cls._get_methods_father_class(obj)
+        func_closure = (
+            tuple(cell for cell in obj.__closure__ if cell.cell_contents is not func_class)
+            if obj.__closure__ is not None
+            else tuple()
+        )
+        func_globals = {
+            key: cls.convert(value)
+            for key, value in obj.__globals__.items()
+            if key in obj.__code__.co_names
+            and value is not func_class
+            and key != obj.__code__.co_name
+        }
+
+        converted_func = cls.convert(
+            dict(
+                code=func_code,
+                name=func_name,
+                argdefs=func_defaults,
+                closure=func_closure,
+                func_dict=func_dict,
+                globals=func_globals
+            )
+        )
+        return cls._create_dict(converted_func, FUNCTION_TYPE, is_method=isinstance(obj, MethodType))
+
+    @classmethod
+    def _convert_back_function(cls, obj):
+        converted_func = cls.convert_back(cls._get_data(obj))
+
+        func_dict = converted_func.pop('func_dict')
+
+        new_func = FunctionType(**converted_func)
+        new_func.__dict__.update(func_dict)
+        new_func.__globals__.update({new_func.__name__: new_func})
+        return new_func
+
+    @classmethod
+    def _convert_cell(cls, obj):
+        data = cls.convert(obj.cell_contents)
+        return cls._create_dict(data, CELL_TYPE)
+
+    @classmethod
+    def _convert_back_cell(cls, obj):
+        return cls._make_cell(cls.convert_back(cls._get_data(obj)))
+
+    @classmethod
+    def _convert_code(cls, obj):
+        attrs = [attr for attr in dir(obj) if attr.startswith('co')]
+
+        code_dict = {
+            attr: cls.convert(getattr(obj, attr))
+            for attr in attrs
+            if attr not in UNSERIALIZABLE_CODE_TYPES
+        }
+
+        return cls._create_dict(code_dict, CODE_TYPE)
+
+    @classmethod
+    def _convert_back_code(cls, obj):
+        data = cls._get_data(obj)
+
+        def func():
+            pass
+
+        code_dict = cls.convert_back(data)
+        return func.__code__.replace(**code_dict)
+
     @staticmethod
     def _create_dict(data, _type, **additional):
         return dict(__type=_type, data=data, **additional)
@@ -77,3 +169,17 @@ class Converter:
     def _get_data(obj):
         if isinstance(obj, dict):
             return obj.get('data')
+
+    @staticmethod
+    def _get_methods_father_class(method):
+        cls = getattr(
+            inspect.getmodule(method),
+            method.__qualname__.split('.<locals>', 1)[0].rsplit('.', 1)[0],
+            None
+        )
+        if isinstance(cls, type):
+            return cls
+
+    @staticmethod
+    def _make_cell(value):
+        return (lambda: value).__closure__[0]

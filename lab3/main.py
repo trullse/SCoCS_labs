@@ -3,6 +3,13 @@ from serializer.converter import Converter
 from unittest import TestCase, main
 
 
+def func(x):
+    a = 5
+    if x > 5:
+        return x
+    return a
+
+
 class PrimitiveTypesCheck(TestCase):
     def test_nums(self):
         json_serializer = Serializer.create_serializer('json')
@@ -49,6 +56,12 @@ class PrimitiveTypesCheck(TestCase):
         tuple_back = Converter.convert_back(converted_tuple)
 
         return self.assertEqual(sett, set_back) and self.assertEqual(tuplee, tuple_back)
+
+    def test_functions(self):
+        converted_func = Converter.convert(func)
+        func_back = Converter.convert_back(converted_func)
+
+        return self.assertEqual(func_back(8), func(8)) and self.assertEqual(func_back(1), func(1))
 
 
 if __name__ == '__main__':
