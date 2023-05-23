@@ -1,5 +1,9 @@
 from lab3.serializer.converter import Converter
-from lab3.serializer.constants import SPACES
+from lab3.serializer.constants import \
+    SPACES, \
+    TRUE, \
+    FALSE, \
+    NULL
 
 
 class SerializerJson:
@@ -46,6 +50,16 @@ class SerializerJson:
             return cls._convert_back_nums(obj, pos)
         elif obj[pos] == '"':
             return cls._convert_back_string(obj, pos)
+        elif obj[pos] in (TRUE[0], FALSE[0]):
+            if obj[pos] == TRUE[0]:
+                pos += len(TRUE)
+                return True, pos
+            elif obj[pos] == FALSE[0]:
+                pos += len(FALSE)
+                return False, pos
+        elif obj[pos] == NULL[0]:
+            pos += len(NULL)
+            return None, pos
         else:
             raise Exception(f"The type in position {pos} is undefined")
 

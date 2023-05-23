@@ -20,6 +20,10 @@ PROPERTY_TYPE = 'property'
 
 SPACES = (' ', '\n', '\t')
 
+TRUE = 'true'
+FALSE = 'false'
+NULL = 'null'
+
 UNSERIALIZABLE_CODE_TYPES = (
     'co_positions',
     'co_lines',
