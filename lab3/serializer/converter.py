@@ -2,10 +2,28 @@ import base64
 import builtins
 import inspect
 
-from lab3.serializer.constants import PRIMITIVE_TYPES, BYTES_TYPE, TUPLE_TYPE, SET_TYPE, \
-    FUNCTION_TYPE, CELL_TYPE, CODE_TYPE, UNSERIALIZABLE_CODE_TYPES, MODULE_TYPE, CLASS_TYPE, UNSERIALIZABLE_DUNDER, \
-    UNSERIALIZABLE_TYPES, ITERATOR_TYPE, PROPERTY_TYPE, OBJ_TYPE
-from types import FunctionType, MethodType, CellType, CodeType, ModuleType
+from lab3.serializer.constants import \
+    PRIMITIVE_TYPES, \
+    BYTES_TYPE, \
+    TUPLE_TYPE, \
+    SET_TYPE, \
+    FUNCTION_TYPE, \
+    CELL_TYPE, \
+    CODE_TYPE, \
+    UNSERIALIZABLE_CODE_TYPES, \
+    MODULE_TYPE, \
+    CLASS_TYPE, \
+    UNSERIALIZABLE_DUNDER, \
+    UNSERIALIZABLE_TYPES, \
+    ITERATOR_TYPE, \
+    PROPERTY_TYPE, \
+    OBJ_TYPE
+from types import \
+    FunctionType, \
+    MethodType, \
+    CellType, \
+    CodeType, \
+    ModuleType
 
 
 class Converter:
