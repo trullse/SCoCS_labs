@@ -24,7 +24,7 @@ class SerializerJson:
     @classmethod
     def loads(cls, obj):
         result, pos = cls._convert_back_from_json(obj)
-        return cls._converter.convert_back(result)
+        return cls._converter.deconvert(result)
 
     @classmethod
     def _convert_to_json(cls, obj):

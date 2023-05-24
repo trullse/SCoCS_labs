@@ -19,7 +19,7 @@ class SerializerXml:
     @classmethod
     def loads(cls, obj):
         result, _ = cls._convert_back_from_xaml(obj)
-        return cls._converter.convert_back(result)
+        return cls._converter.deconvert(result)
 
     @classmethod
     def load(cls, file):
