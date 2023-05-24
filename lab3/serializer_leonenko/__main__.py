@@ -1,5 +1,5 @@
 import sys
-from lab3.serializer_leonenko.serializer import Serializer
+from serializer_leonenko.serializer import Serializer
 def main():
     args = sys.argv
 
