@@ -93,7 +93,7 @@ class SerializerXml:
 
     @classmethod
     def _convert_back_NoneType(cls, obj, pos):
-        close_tag = '</nonetype>'
+        close_tag = '</NoneType>'
         end_pos = cls._get_value(obj, pos, close_tag)
 
         return None, end_pos + len(close_tag)

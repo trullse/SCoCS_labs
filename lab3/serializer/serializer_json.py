@@ -30,10 +30,10 @@ class SerializerJson:
     def _convert_to_json(cls, obj):
         if isinstance(obj, str):
             return f'"{obj}"'
+        elif isinstance(obj, bool):
+            return str(obj).lower()
         elif isinstance(obj, (int, float)):
             return str(obj)
-        elif isinstance(obj, bool):
-            return str(bool).lower()
         elif isinstance(obj, type(None)):
             return "null"
         elif isinstance(obj, list):
@@ -52,11 +52,11 @@ class SerializerJson:
             return cls._convert_back_nums(obj, pos)
         elif obj[pos] == '"':
             return cls._convert_back_string(obj, pos)
-        elif obj[pos] in (TRUE[0], FALSE[0]):
-            if obj[pos] == TRUE[0]:
+        elif obj[pos] in ('t', 'f'):
+            if obj[pos] == 't':
                 pos += len(TRUE)
                 return True, pos
-            elif obj[pos] == FALSE[0]:
+            elif obj[pos] == 'f':
                 pos += len(FALSE)
                 return False, pos
         elif obj[pos] == NULL[0]:
