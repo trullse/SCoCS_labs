@@ -126,14 +126,13 @@ class TestCollections(TestCase):
         return self.assertEqual(dct, json_converted_back, xml_converted_back)
 
 
-def generator():
-    yield 1
-    yield 2
-    yield 3
-
-
 class TestOthers(TestCase):
     def test_generator(self):
+        def generator():
+            yield 1
+            yield 2
+            yield 3
+
         json_converted = json_serializer.dumps(generator)
         xml_converted = xml_serializer.dumps(generator)
 
@@ -144,5 +143,19 @@ class TestOthers(TestCase):
         json_result = list(json_converted_back())
         xml_result = list(xml_converted_back())
 
-        return self.assertEqual(result, json_result)
+        return self.assertEqual(result, json_result, xml_result)
 
+    def test_iterator(self):
+        iterator = iter([1, 2, 3])
+
+        json_converted = json_serializer.dumps(iterator)
+        xml_converted = xml_serializer.dumps(iterator)
+
+        json_converted_back = json_serializer.loads(json_converted)
+        xml_converted_back = xml_serializer.loads(xml_converted)
+
+        result = [1, 2, 3]
+        json_result = list(json_converted_back)
+        xml_result = list(xml_converted_back)
+
+        return self.assertEqual(result, json_result)
