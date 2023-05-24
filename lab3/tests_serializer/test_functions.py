@@ -1,7 +1,7 @@
 import unittest
 import math
 
-from lab3.serializer_leonenko.serializer import Serializer
+from serializer_leonenko.serializer import Serializer
 
 JSON_DATATYPE = 'json'
 XML_DATATYPE = 'xml'

@@ -84,6 +84,14 @@ class TestSimpleClass(unittest.TestCase):
 
         return self.assertEqual(result, json_test_result, xml_test_result)
 
+    def test_files_work(self):
+        with open('../test.json', 'w+') as file:
+            json_serializer.dump(ValueClass, file=file)
+        with open('../test.json', 'r') as file:
+            json_decoded = json_serializer.load(file=file)
+
+        self.assertEqual(ValueClass.a, json_decoded.a)
+
     def test_class_with_methods(self):
 
         json_decoded = json_serializer.loads(json_serializer.dumps(ClassWithStaticAndClassMethods))
