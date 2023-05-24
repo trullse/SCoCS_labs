@@ -98,6 +98,60 @@ class SerializerXml:
 
         return None, end_pos + len(close_tag)
 
+    @classmethod
+    def _convert_back_list(cls, obj, pos):
+        end_pos = pos
+        open_tag = '<list>'
+        close_tag = '</list>'
+        deep = 1
+        while deep != 0:
+            if obj[end_pos:end_pos + len(open_tag)] == open_tag:
+                deep += 1
+            if obj[end_pos:end_pos + len(close_tag)] == close_tag:
+                deep -= 1
+
+            if deep != 0:
+                end_pos += 1
+
+        arr = []
+        while pos < end_pos:
+            result, pos = cls._convert_back_from_xaml(obj, pos)
+            arr.append(result)
+
+        return arr, end_pos + len(close_tag)
+
+    @classmethod
+    def _convert_back_dict(cls, obj, pos):
+        end_pos = pos
+        open_tag = '<dict>'
+        close_tag = '</dict>'
+        deep = 1
+        while deep != 0:
+            if obj[end_pos:end_pos + len(open_tag)] == open_tag:
+                deep += 1
+            if obj[end_pos:end_pos + len(close_tag)] == close_tag:
+                deep -= 1
+
+            if deep != 0:
+                end_pos += 1
+
+        result = {}
+
+        while pos < end_pos:
+            key_start_pos = key_end_pos = pos + 1
+
+            while obj[key_end_pos] != '>':
+                key_end_pos += 1
+
+            key = obj[key_start_pos:key_end_pos]
+
+            value, pos = cls._convert_back_from_xaml(obj, key_end_pos + 1)
+            pos += len(key) + 3
+
+            result[key] = value
+
+        return result, end_pos + len(close_tag)
+
     @staticmethod
     def _get_value(obj, pos, close_tag):
         end_pos = pos

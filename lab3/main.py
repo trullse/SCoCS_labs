@@ -129,11 +129,16 @@ class PrimitiveTypesCheck(TestCase):
 
     def test_class_inherited(self):
         json_serializer = Serializer.create_serializer(JSON_TYPE)
+        xml_serializer = Serializer.create_serializer(XML_TYPE)
 
-        converted_class = json_serializer.dumps(Class2)
-        class_back = json_serializer.loads(converted_class)
+        json_converted_class = json_serializer.dumps(Class2)
+        xml_converted_class = xml_serializer.dumps(Class2)
 
-        return self.assertEqual(Class2.a, class_back.a) and self.assertEqual(Class2.b, class_back.b)
+        json_class_back = json_serializer.loads(json_converted_class)
+        xml_class_back = xml_serializer.loads(xml_converted_class)
+
+        return self.assertEqual(Class2.a, json_class_back.a, xml_class_back) \
+            and self.assertEqual(Class2.b, json_class_back.b, xml_class_back)
 
     def test_class_with_method(self):
         converted_class = Converter.convert(Class3)
