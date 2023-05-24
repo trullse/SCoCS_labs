@@ -54,7 +54,7 @@ class PropertyClass:
 class PrimitiveTypesCheck(TestCase):
     def test_nums(self):
         json_serializer = Serializer.create_serializer(JSON_TYPE)
-        # xml_serializer = Serializer.create_serializer('xml')
+        xml_serializer = Serializer.create_serializer(XML_TYPE)
 
         a = -324
         b = 3.93493
@@ -62,31 +62,31 @@ class PrimitiveTypesCheck(TestCase):
         json_converted_a = json_serializer.dumps(a)
         json_converted_b = json_serializer.dumps(b)
 
-        # xml_converted_a = xml_serializer.dumps(a)
-        # xml_converted_b = xml_serializer.dumps(b)
+        xml_converted_a = xml_serializer.dumps(a)
+        xml_converted_b = xml_serializer.dumps(b)
 
         json_converted_back_a = json_serializer.loads(json_converted_a)
         json_converted_back_b = json_serializer.loads(json_converted_b)
 
-        # xml_converted_back_a = xml_serializer.loads(xml_converted_a)
-        # xml_converted_back_b = xml_serializer.loads(xml_converted_b)
+        xml_converted_back_a = xml_serializer.loads(xml_converted_a)
+        xml_converted_back_b = xml_serializer.loads(xml_converted_b)
 
-        # return self.assertEqual(a, json_converted_back_a, xml_converted_back_a) \
-        #     and self.assertEqual(b, json_converted_back_b, xml_converted_back_b)
-
-        return self.assertEqual(a, json_converted_back_a) \
-            and self.assertEqual(b, json_converted_back_b)
+        return self.assertEqual(a, json_converted_back_a, xml_converted_back_a) \
+            and self.assertEqual(b, json_converted_back_b, xml_converted_back_b)
 
     def test_string(self):
         json_serializer = Serializer.create_serializer(JSON_TYPE)
+        xml_serializer = Serializer.create_serializer(XML_TYPE)
 
         string = 'Some string'
 
         json_converted = json_serializer.dumps(string)
+        xml_converted = xml_serializer.dumps(string)
 
         json_converted_back = json_serializer.loads(json_converted)
+        xml_converted_back = xml_serializer.loads(xml_converted)
 
-        return self.assertEqual(string, json_converted_back)
+        return self.assertEqual(string, json_converted_back, xml_converted_back)
 
     def test_list(self):
         # json_serializer = Serializer.create_serializer('json')
