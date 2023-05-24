@@ -1,6 +1,6 @@
-from lab3.serializer.constants import JSON_TYPE, XML_TYPE
-from lab3.serializer.serializer_json import SerializerJson
-from lab3.serializer.serializer_xml import SerializerXml
+from .constants import JSON_TYPE, XML_TYPE
+from .serializer_json import SerializerJson
+from .serializer_xml import SerializerXml
 
 
 class Serializer:

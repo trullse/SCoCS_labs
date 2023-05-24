@@ -1,5 +1,5 @@
-from lab3.serializer.converter import Converter
-from lab3.serializer.constants import \
+from .converter import Converter
+from .constants import \
     SPACES, \
     TRUE, \
     FALSE, \

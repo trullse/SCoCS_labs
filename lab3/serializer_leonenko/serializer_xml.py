@@ -1,8 +1,6 @@
-from lab3.serializer.converter import Converter
-from lab3.serializer.constants import \
-    TRUE, \
-    FALSE, \
-    NULL
+from .converter import Converter
+from .constants import \
+    TRUE
 
 
 class SerializerXml:

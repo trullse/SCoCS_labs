@@ -1,6 +1,6 @@
 from unittest import TestCase
-from lab3.serializer.serializer import Serializer
-from lab3.serializer.constants import JSON_TYPE, XML_TYPE
+from lab3.serializer_leonenko.serializer import Serializer
+from lab3.serializer_leonenko.constants import JSON_TYPE, XML_TYPE
 
 
 json_serializer = Serializer.create_serializer(JSON_TYPE)

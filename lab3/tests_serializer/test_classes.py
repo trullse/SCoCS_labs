@@ -1,6 +1,6 @@
 import unittest
 
-from lab3.serializer.serializer import Serializer
+from serializer_leonenko.serializer import Serializer
 JSON_DATATYPE = 'json'
 XML_DATATYPE = 'xml'
 
