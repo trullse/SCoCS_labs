@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.views import generic
 
 
-def index(request):
-    return HttpResponse("You're at the pharmacy index.")
+class IndexView(generic.TemplateView):
+    template_name = "pharmacy/index.html"
 
 
 class CategoriesIndexView(generic.ListView):
