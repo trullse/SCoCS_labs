@@ -2,13 +2,22 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import generic
 
+from .models import MedicineCategory
+
 
 class IndexView(generic.TemplateView):
     template_name = "pharmacy/index.html"
 
 
 class CategoriesIndexView(generic.ListView):
-    pass
+    template_name = "pharmacy/categories_index.html"
+    context_object_name = "categories_list"
+
+    def get_queryset(self):
+        """
+        Return the categories
+        """
+        return MedicineCategory.objects.order_by("-name")
 
 
 class CategoriesDetailView(generic.DetailView):
