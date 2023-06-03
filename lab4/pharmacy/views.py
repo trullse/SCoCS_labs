@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import generic
 
-from .models import MedicineCategory, Medicine
+from .models import MedicineCategory, Medicine, Supplier
 
 
 class IndexView(generic.TemplateView):
@@ -54,8 +54,16 @@ class SalesAddView(generic.View):
 
 
 class SuppliersIndexView(generic.ListView):
-    pass
+    template_name = "pharmacy/suppliers_index.html"
+    context_object_name = "suppliers_list"
+
+    def get_queryset(self):
+        """
+        Return the suppliers
+        """
+        return Supplier.objects.order_by("-name")
 
 
 class SuppliersDetailView(generic.DetailView):
-    pass
+    model = Supplier
+    template_name = "pharmacy/suppliers_detail.html"

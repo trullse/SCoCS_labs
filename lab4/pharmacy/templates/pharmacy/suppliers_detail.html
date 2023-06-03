@@ -1,0 +1,14 @@
+{% extends "pharmacy/base.html" %}
+
+{% block content %}
+<h1>{{ supplier.name }}</h1>
+{% if supplier.medicine_set.all %}
+<ul>
+    {% for medicine in supplier.medicine_set.all %}
+    <li><a href="{% url 'pharmacy:medicine_detail' medicine.id %}">{{ medicine.name }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No medicines are available.</p>
+{% endif %}
+{% endblock %}
