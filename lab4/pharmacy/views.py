@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import generic
 
-from .models import MedicineCategory
+from .models import MedicineCategory, Medicine
 
 
 class IndexView(generic.TemplateView):
@@ -26,11 +26,19 @@ class CategoriesDetailView(generic.DetailView):
 
 
 class MedicinesIndexView(generic.ListView):
-    pass
+    template_name = "pharmacy/medicines_index.html"
+    context_object_name = "medicines_list"
+
+    def get_queryset(self):
+        """
+        Return the medicines
+        """
+        return Medicine.objects.order_by("-name")
 
 
 class MedicinesDetailView(generic.DetailView):
-    pass
+    model = Medicine
+    template_name = "pharmacy/medicines_detail.html"
 
 
 class SalesIndexView(generic.ListView):

@@ -1,0 +1,12 @@
+{% extends "pharmacy/base.html" %}
+
+{% block content %}
+<h1>{{ medicine.name }}</h1>
+<p>Category: {{ medicine.category }}</p>
+<p>Price: {{ medicine.price }}</p>
+<p>Supplier: {{ medicine.supplier.name }}</p>
+<h3>Description:</h3>
+<p>{{ medicine.description }}</p>
+<h3>Instruction:</h3>
+<p>{{ medicine.instruction }}</p>
+{% endblock %}
