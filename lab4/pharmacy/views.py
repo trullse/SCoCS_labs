@@ -21,7 +21,8 @@ class CategoriesIndexView(generic.ListView):
 
 
 class CategoriesDetailView(generic.DetailView):
-    pass
+    model = MedicineCategory
+    template_name = "pharmacy/categories_detail.html"
 
 
 class MedicinesIndexView(generic.ListView):
