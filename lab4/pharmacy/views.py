@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
@@ -44,7 +45,7 @@ class MedicinesDetailView(generic.DetailView):
     template_name = "pharmacy/medicines_detail.html"
 
 
-class SalesIndexView(generic.ListView):
+class SalesIndexView(LoginRequiredMixin, generic.ListView):
     template_name = "pharmacy/sales_index.html"
     context_object_name = "sales_list"
 
@@ -55,12 +56,12 @@ class SalesIndexView(generic.ListView):
         return Sale.objects.order_by("-date")
 
 
-class SalesDetailView(generic.DetailView):
+class SalesDetailView(LoginRequiredMixin, generic.DetailView):
     model = Sale
     template_name = "pharmacy/sales_detail.html"
 
 
-class SuppliersIndexView(generic.ListView):
+class SuppliersIndexView(LoginRequiredMixin, generic.ListView):
     template_name = "pharmacy/suppliers_index.html"
     context_object_name = "suppliers_list"
 
@@ -71,14 +72,15 @@ class SuppliersIndexView(generic.ListView):
         return Supplier.objects.order_by("-name")
 
 
-class SuppliersDetailView(generic.DetailView):
+class SuppliersDetailView(LoginRequiredMixin, generic.DetailView):
     model = Supplier
     template_name = "pharmacy/suppliers_detail.html"
 
 
-class SaleCreate(generic.CreateView):
+class SaleCreate(PermissionRequiredMixin, generic.CreateView):
+    permission_required = 'pharmacy.add_sale'
     model = Sale
     fields = '__all__'
-    initial = {'date': datetime.now().__str__(), }
+    initial = {'date': datetime.now(), }
     template_name = "pharmacy/sales_add.html"
     success_url = reverse_lazy('pharmacy:sale_index')
