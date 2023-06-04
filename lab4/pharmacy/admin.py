@@ -10,7 +10,7 @@ class EmployeeInline(admin.TabularInline):
 
 
 class UserAdminCustom(UserAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_superuser')
+    list_display = ('email', 'first_name', 'last_name', 'employee', 'is_superuser')
     list_filter = ('is_staff', 'is_superuser')
     search_fields = ('username', )
     inlines = [EmployeeInline]
