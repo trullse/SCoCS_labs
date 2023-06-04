@@ -19,7 +19,7 @@ urlpatterns = [
     # ex: /pharmacy/sales/2/
     path("sales/<int:pk>/", views.SalesDetailView.as_view(), name="sale_detail"),
     # ex: /pharmacy/sales/add/
-    path("sales/add/", views.SalesAddView.as_view(), name="sale_add"),
+    path("sales/add/", views.SaleCreate.as_view(), name="sale_add"),
     # ex: /pharmacy/suppliers/
     path("suppliers/", views.SuppliersIndexView.as_view(), name="supplier_index"),
     # ex: /pharmacy/suppliers/2/

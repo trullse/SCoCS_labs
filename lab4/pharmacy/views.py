@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from .models import MedicineCategory, Medicine, Supplier, Sale
@@ -57,10 +60,6 @@ class SalesDetailView(generic.DetailView):
     template_name = "pharmacy/sales_detail.html"
 
 
-class SalesAddView(generic.TemplateView):
-    template_name = "pharmacy/sales_add.html"
-
-
 class SuppliersIndexView(generic.ListView):
     template_name = "pharmacy/suppliers_index.html"
     context_object_name = "suppliers_list"
@@ -75,3 +74,11 @@ class SuppliersIndexView(generic.ListView):
 class SuppliersDetailView(generic.DetailView):
     model = Supplier
     template_name = "pharmacy/suppliers_detail.html"
+
+
+class SaleCreate(generic.CreateView):
+    model = Sale
+    fields = '__all__'
+    initial = {'date': datetime.now().__str__(), }
+    template_name = "pharmacy/sales_add.html"
+    success_url = reverse_lazy('pharmacy:sale_index')

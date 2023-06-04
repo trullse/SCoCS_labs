@@ -1,5 +1,9 @@
+from datetime import datetime
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Supplier(models.Model):
@@ -49,7 +53,7 @@ class PharmacyDepartment(models.Model):
 
 
 class Sale(models.Model):
-    date = models.DateTimeField("Date sold")
+    date = models.DateTimeField("Date sold", default=datetime.now())
     ph_department = models.ForeignKey(PharmacyDepartment, on_delete=models.CASCADE)
     medicines = models.ManyToManyField(Medicine)
 
@@ -58,6 +62,10 @@ class Sale(models.Model):
 
     def __str__(self):
         return self.date.__str__()
+
+    def clean(self):
+        if self.date > timezone.now():
+            raise ValidationError("Date is incorrect")
 
 
 class Employee(models.Model):

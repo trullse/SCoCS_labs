@@ -1,5 +1,14 @@
 {% extends "pharmacy/base.html" %}
 
 {% block content %}
-<h1>Enter the information</h1>
+<h1>Fill the information</h1>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Submit" />
+
+</form>
 {% endblock %}
