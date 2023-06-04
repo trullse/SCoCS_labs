@@ -1,4 +1,5 @@
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -73,15 +74,11 @@ class Sale(models.Model):
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     department = models.ForeignKey(PharmacyDepartment, on_delete=models.CASCADE)
+    date_of_birth = models.DateTimeField("Date of Birth", default=datetime.now() - relativedelta(years=18))
 
     def __str__(self):
         return f'{self.user.__str__()} in {self.department}'
 
-
-@receiver(post_save, sender=User)
-def update_profile_signal(sender, instance, created, **kwargs):
-    # if created and instance.employee is not None:
-    #     Employee.objects.create(user=instance)
-    # instance.employee.save()
-    pass
-
+    def clean(self):
+        if timezone.now() - relativedelta(years=+18) < self.date_of_birth:  # i duno why it's working this way
+            raise ValidationError("Come back when you're eighteen")
