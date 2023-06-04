@@ -28,8 +28,10 @@
                 <li><a href="{% url 'pharmacy:index' %}">Home</a></li>
                 <li><a href="{% url 'pharmacy:category_index' %}">Categories</a></li>
                 <li><a href="{% url 'pharmacy:medicine_index' %}">Medicines</a></li>
-                {% if user.is_authenticated %}
+                {% if perms.pharmacy.view_supplier %}
                 <li><a href="{% url 'pharmacy:supplier_index' %}">Suppliers</a></li>
+                {% endif %}
+                {% if perms.pharmacy.view_sale %}
                 <li><a href="{% url 'pharmacy:sale_index' %}">Sales</a></li>
                 {% endif %}
                 {% if user.is_authenticated %}

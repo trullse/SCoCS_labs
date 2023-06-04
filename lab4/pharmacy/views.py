@@ -45,7 +45,8 @@ class MedicinesDetailView(generic.DetailView):
     template_name = "pharmacy/medicines_detail.html"
 
 
-class SalesIndexView(LoginRequiredMixin, generic.ListView):
+class SalesIndexView(PermissionRequiredMixin, generic.ListView):
+    permission_required = 'pharmacy.view_sale'
     template_name = "pharmacy/sales_index.html"
     context_object_name = "sales_list"
 
@@ -56,12 +57,14 @@ class SalesIndexView(LoginRequiredMixin, generic.ListView):
         return Sale.objects.order_by("-date")
 
 
-class SalesDetailView(LoginRequiredMixin, generic.DetailView):
+class SalesDetailView(PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'pharmacy.view_sale'
     model = Sale
     template_name = "pharmacy/sales_detail.html"
 
 
-class SuppliersIndexView(LoginRequiredMixin, generic.ListView):
+class SuppliersIndexView(PermissionRequiredMixin, generic.ListView):
+    permission_required = 'pharmacy.view_supplier'
     template_name = "pharmacy/suppliers_index.html"
     context_object_name = "suppliers_list"
 
@@ -72,7 +75,8 @@ class SuppliersIndexView(LoginRequiredMixin, generic.ListView):
         return Supplier.objects.order_by("-name")
 
 
-class SuppliersDetailView(LoginRequiredMixin, generic.DetailView):
+class SuppliersDetailView(PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'pharmacy.view_supplier'
     model = Supplier
     template_name = "pharmacy/suppliers_detail.html"
 
