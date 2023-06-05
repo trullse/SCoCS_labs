@@ -16,12 +16,56 @@ class UserAdminCustom(UserAdmin):
     inlines = [EmployeeInline]
 
 
+class MedicineAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'price', 'get_supplier_name')
+    list_filter = ('category', 'supplier__name', 'category__name')
+    search_fields = ('name', )
+
+    def get_supplier_name(self, obj):
+        return obj.supplier.name
+
+    get_supplier_name.short_description = 'Supplier Name'
+    get_supplier_name.admin_order_field = 'supplier__name'
+
+
+class MedicineCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    search_fields = ('name', )
+
+
+class EmployeeInline(admin.TabularInline):
+    model = Employee
+    extra = 0
+
+
+class PharmacyDepartmentsAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['address', 'medicines']}),
+    ]
+    inlines = [EmployeeInline]
+
+
+class MedicineInline(admin.TabularInline):
+    model = Medicine
+    extra = 0
+
+
+class SupplierAdmin(admin.ModelAdmin):
+    search_fields = ('name', )
+    inlines = [MedicineInline]
+
+
+class SaleAdmin(admin.ModelAdmin):
+    search_fields = ('date', )
+    list_display = ('date', 'ph_department')
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdminCustom)
 
 
-admin.site.register(Medicine)
-admin.site.register(Supplier)
-admin.site.register(PharmacyDepartment)
-admin.site.register(MedicineCategory)
-admin.site.register(Sale)
+admin.site.register(Medicine, MedicineAdmin)
+admin.site.register(Supplier, SupplierAdmin)
+admin.site.register(PharmacyDepartment, PharmacyDepartmentsAdmin)
+admin.site.register(MedicineCategory, MedicineCategoryAdmin)
+admin.site.register(Sale, SaleAdmin)
