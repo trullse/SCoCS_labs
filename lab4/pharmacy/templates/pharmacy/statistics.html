@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if perms.pharmacy.add_sale %}
+<h1>Statistics page</h1>
+{% endif %}
+{% endblock %}

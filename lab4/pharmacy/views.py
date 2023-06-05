@@ -88,3 +88,8 @@ class SaleCreate(PermissionRequiredMixin, generic.CreateView):
     initial = {'date': datetime.now(), }
     template_name = "pharmacy/sales_add.html"
     success_url = reverse_lazy('pharmacy:sale_index')
+
+
+class StatisticsView(PermissionRequiredMixin, generic.TemplateView):
+    permission_required = 'pharmacy.view_sale'
+    template_name = 'pharmacy/statistics.html'

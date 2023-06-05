@@ -34,6 +34,9 @@
                 {% if perms.pharmacy.view_sale %}
                 <li><a href="{% url 'pharmacy:sale_index' %}">Sales</a></li>
                 {% endif %}
+                {% if perms.pharmacy.view_sale %}
+                <li><a href="{% url 'pharmacy:statistics' %}">Statistics</a></li>
+                {% endif %}
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
                 {% endif %}
