@@ -72,9 +72,13 @@ class Sale(models.Model):
         return self.date.__str__()
 
     def clean(self):
-        if self.date > timezone.now():
-            logger.error('Sale date error')
-            raise ValidationError("Date is incorrect")
+        try:
+            if self.date > timezone.now():
+                logger.error('Sale date error')
+                raise ValidationError("Date is incorrect")
+        except TypeError:
+            logger.error('Can\'t convert input into date')
+            raise ValidationError('Date is incorrect')
 
 
 class Employee(models.Model):
@@ -86,9 +90,12 @@ class Employee(models.Model):
         return f'{self.user.__str__()} in {self.department}'
 
     def clean(self):
-        if timezone.now() - relativedelta(years=+18) < self.date_of_birth:  # i duno why it's working this way
-            logger.error('Employee\'s age error')
-            raise ValidationError("Come back when you're eighteen")
-
+        try:
+            if timezone.now() - relativedelta(years=+18) < self.date_of_birth:  # i duno why it's working this way
+                logger.error('Employee\'s age error')
+                raise ValidationError("Come back when you're eighteen")
+        except TypeError:
+            logger.error('Can\'t convert input into date')
+            raise ValidationError('Date is incorrect')
 
 # logger = logging.getLogger(__name__)
