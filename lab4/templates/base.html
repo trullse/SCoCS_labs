@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% block title %}<title>Pharmacy</title>{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Добавление дополнительного статического CSS файла -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pharmacy/css/styles.css' %}">
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-2">
+            {% block sidebar %}
+            <ul class="sidebar-nav">
+                {% if user.is_authenticated %}
+                <li>Welcome, {{ user.get_username }}</li>
+                {% else %}
+                <li>Unauthorized, <a href="{% url 'login'%}?next={{request.path}}">login</a></li>
+                {% endif %}
+                <li><a href="{% url 'pharmacy:index' %}">Home</a></li>
+                <li><a href="{% url 'pharmacy:category_index' %}">Categories</a></li>
+                <li><a href="{% url 'pharmacy:medicine_index' %}">Medicines</a></li>
+                {% if perms.pharmacy.view_supplier %}
+                <li><a href="{% url 'pharmacy:supplier_index' %}">Suppliers</a></li>
+                {% endif %}
+                {% if perms.pharmacy.view_sale %}
+                <li><a href="{% url 'pharmacy:sale_index' %}">Sales</a></li>
+                {% endif %}
+                {% if perms.pharmacy.view_sale %}
+                <li><a href="{% url 'pharmacy:statistics' %}">Statistics</a></li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+                {% endif %}
+            </ul>
+            {% endblock %}
+        </div>
+        <div class="col-sm-10 ">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

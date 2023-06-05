@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if perms.pharmacy.add_sale %}
+<h1>Statistics page</h1>
+{% load static %}
+<img src="{% static 'pharmacy/images/plot.png' %}" class="img-thumbnail" alt="...">
+{% endif %}
+{% endblock %}

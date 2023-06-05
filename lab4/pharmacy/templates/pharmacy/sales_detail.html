@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ sale.date }}</h1>
+<p>Pharmacy department: {{ sale.ph_department }}</p>
+<h3>Medicines:</h3>
+{% if sale.medicines.all %}
+<ul>
+    {% for medicine in sale.medicines.all %}
+    <li><a href="{% url 'pharmacy:medicine_detail' medicine.id %}">{{ medicine.name }} - {{ medicine.price }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No medicines are available.</p>
+{% endif %}
+{% endblock %}

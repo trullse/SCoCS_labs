@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if perms.pharmacy.add_sale %}
+<h3><a href="{% url 'pharmacy:sale_add' %}">Make a sell</a></h3>
+{% endif %}
+{% if sales_list %}
+<ul>
+    {% for sale in sales_list %}
+    <li><a href="{% url 'pharmacy:sale_detail' sale.id %}">{{ sale.date }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No sales are available.</p>
+{% endif %}
+{% endblock %}
