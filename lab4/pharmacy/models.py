@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+import logging
 
 
 class Supplier(models.Model):
@@ -82,3 +83,6 @@ class Employee(models.Model):
     def clean(self):
         if timezone.now() - relativedelta(years=+18) < self.date_of_birth:  # i duno why it's working this way
             raise ValidationError("Come back when you're eighteen")
+
+
+# logger = logging.getLogger(__name__)
