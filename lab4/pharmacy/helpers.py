@@ -14,7 +14,7 @@ logger = logging.getLogger('main')
 
 def plot_last_days_sales():
     # Get the last three days' sales
-    three_days_ago = datetime.datetime.today() - datetime.timedelta(days=3)
+    three_days_ago = datetime.datetime.today() - datetime.timedelta(days=2)
     logger.debug(f'three days ago - {three_days_ago}')
     sales = Sale.objects.filter(date__gte=three_days_ago.date())
     logger.debug(sales)
@@ -22,6 +22,8 @@ def plot_last_days_sales():
     # Calculate the sales count for each day
     daily_sales = sales.annotate(sale_date=TruncDate('date')).values('sale_date').annotate(sales_count=Count('id'))
     logger.debug(f'daily sales - {daily_sales}')
+    if len(daily_sales) == 0:
+        logger.warning('No sales found in last 3 days ')
 
     # Get the most popular medicine
     medicine_count = {}

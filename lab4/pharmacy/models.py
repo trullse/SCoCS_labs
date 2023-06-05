@@ -10,6 +10,9 @@ from django.utils import timezone
 import logging
 
 
+logger = logging.getLogger('main')
+
+
 class Supplier(models.Model):
     name = models.CharField(max_length=50)
 
@@ -69,6 +72,7 @@ class Sale(models.Model):
 
     def clean(self):
         if self.date > timezone.now():
+            logger.error('Sale date error')
             raise ValidationError("Date is incorrect")
 
 
@@ -82,6 +86,7 @@ class Employee(models.Model):
 
     def clean(self):
         if timezone.now() - relativedelta(years=+18) < self.date_of_birth:  # i duno why it's working this way
+            logger.error('Employee\'s age error')
             raise ValidationError("Come back when you're eighteen")
 
 
